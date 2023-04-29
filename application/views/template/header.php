@@ -12,8 +12,17 @@
     <title>PT. Berkah Jaya Lestarindo</title>
     <!-- StyleSheets  -->
 
+    <meta name="base_url" content="<?= site_url('/') ?>">
+
     <link rel="stylesheet" href="<?= site_url('assets/css/dashlite.css?ver=3.1.0') ?>">
     <link rel="stylesheet" href="<?= site_url('assets/css/theme.css?ver=3.1.0') ?>">
+    <link rel="stylesheet" href="<?= site_url('assets/css/main.css?_=') . rand() ?>">
+
+    <?php
+		if (isset($top_css_pages)) {
+			echo $top_css_pages;
+		}
+	?>
 </head>
 
 <body class="nk-body bg-lighter npc-general has-sidebar ">
@@ -55,18 +64,37 @@
                                 <li class="nk-menu-item">
                                     <a href="<?= site_url('karyawan') ?>" class="nk-menu-link">
                                         <span class="nk-menu-icon">
-                                            <em class="icon ni ni-users"></em>
+                                            <em class="icon ni ni-users-fill"></em>
                                         </span>
                                         <span class="nk-menu-text">Data Karyawan</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-heading">
+                                    <h6 class="overline-title text-primary-alt">Persetujuan</h6>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="<?= site_url('approval/ijin') ?>" class="nk-menu-link">
+                                        <span class="nk-menu-icon">
+                                            <em class="icon ni ni-clock-fill"></em>
+                                        </span>
+                                        <span class="nk-menu-text">Persetujuan Ijin</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="<?= site_url('approval/cuti') ?>" class="nk-menu-link">
+                                        <span class="nk-menu-icon">
+                                            <em class="icon ni ni-calendar-fill"></em>
+                                        </span>
+                                        <span class="nk-menu-text">Persetujuan Cuti</span>
                                     </a>
                                 </li>
                                 <li class="nk-menu-heading">
                                     <h6 class="overline-title text-primary-alt">Laporan</h6>
                                 </li>
                                 <li class="nk-menu-item">
-                                    <a href="<?= site_url('karyawan') ?>" class="nk-menu-link">
+                                    <a href="<?= site_url('laporan_absensi') ?>" class="nk-menu-link">
                                         <span class="nk-menu-icon">
-                                            <em class="icon ni ni-clipboad-check"></em>
+                                            <em class="icon ni ni-reports-alt"></em>
                                         </span>
                                         <span class="nk-menu-text">Laporan Absensi</span>
                                     </a>
@@ -101,14 +129,14 @@
                                                 </div>
                                                 <div class="user-info d-none d-md-block">
                                                     <div class="user-status">Administrator</div>
-                                                    <div class="user-name dropdown-indicator">Ailsa Nafa Devina</div>
+                                                    <div class="user-name dropdown-indicator"><?= $this->session->nama ?></div>
                                                 </div>
                                             </div>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-md dropdown-menu-end dropdown-menu-s1">
                                             <div class="dropdown-inner">
                                                 <ul class="link-list">
-                                                    <li><a href="#"><em class="icon ni ni-signout"></em><span>Sign out</span></a></li>
+                                                    <li><a href="<?= site_url('auth/logout') ?>"><em class="icon ni ni-signout"></em><span>Sign out</span></a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -118,16 +146,3 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- content @s -->
-                <div class="nk-content ">
-                    <div class="container-fluid">
-                        <div class="nk-content-inner">
-                            <div class="nk-content-body">
-                                <div class="nk-block-head nk-block-head-sm">
-                                    <div class="nk-block-between">
-                                        <div class="nk-block-head-content">
-                                            <h3 class="nk-block-title page-title"><?= $page_title ?></h3>
-                                        </div>
-                                    </div><!-- .nk-block-between -->
-                                </div><!-- .nk-block-head -->

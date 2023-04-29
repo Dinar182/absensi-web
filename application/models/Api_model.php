@@ -357,4 +357,34 @@ class Api_model extends CI_Model
 
         return $query->result_array();
     }
+
+    public function header_authentication()
+    {
+        $token = $this->input->get_request_header('token', true);
+
+        if (empty($token)) {
+            
+            return false;
+        } else {
+            $token_decrypt = token_decrypt($token);
+            $decode_token = json_decode($token_decrypt);
+
+            if (empty($decode_token)) {
+
+                return false;
+            } else {
+
+                $nip_kary = $decode_token->nip;
+                $karyawan = $this->db->where('nip', $nip_kary)->get('ms_karyawan')->row_array();
+
+                if ($karyawan['user_token'] != $token) {
+
+                    return false;
+                } else {
+
+                    return true;
+                }
+            }
+        }
+    }
 }

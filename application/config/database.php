@@ -75,6 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
+	// 'hostname' => 'mkopsrv1.com',
+	// 'username' => 'u1601204_absensi',
+	// 'password' => 'pjReZ?EOC[E5',
+	// 'database' => 'u1601204_absensi',
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',

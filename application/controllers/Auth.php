@@ -9,7 +9,7 @@ class Auth extends CI_Controller
         // $this->auth_model->check_login();
 	}
 
-    public function index()
+    public function login()
     {
         if ($this->input->method() == 'get') {
 
@@ -43,7 +43,36 @@ class Auth extends CI_Controller
 
             } else {
 
+                $username = $this->input->post('username');
+                $password = $this->input->post('password');
+
+                $check_user = $this->auth_model->check_user($username, $password);
+
+                if (empty($check_user)) {
+                    $this->session->set_flashdata([
+                        'class' => 'danger',
+                        'message' => 'Anda tidak memiliki akses ke aplikasi ini'
+                    ]);
+
+                    return redirect('auth/login');
+                } else {
+                    $this->session->set_userdata([
+                        'is_login' => true,
+                        'nip' => $check_user['nip'],
+                        'nama' => $check_user['nama'],
+                        'foto_profile' => $check_user['foto_profile']
+                    ]);
+
+                    return redirect('/');
+                }
             }
         }
+    }
+
+    public function logout()
+    {
+        $this->session->sess_destroy();
+
+        redirect('auth/login');
     }
 }

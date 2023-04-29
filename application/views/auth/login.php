@@ -44,6 +44,13 @@
                                         <button class="close" data-bs-dismiss="alert"></button>
                                     </div>
                                 <?php endif; ?>
+
+                                <?php if($this->session->flashdata()): ?>
+                                    <div class="alert alert-<?= $this->session->flashdata('class') ?> alert-dismissible">
+                                        <?= $this->session->flashdata('message') ?>
+                                        <button class="close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                <?php endif; ?>
                                 <form action="<?= current_url() ?>" method="post">
                                     <div class="form-group">
                                         <div class="form-label-group">
