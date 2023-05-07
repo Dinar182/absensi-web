@@ -104,6 +104,26 @@ class Master_model extends CI_Model
         $explode_nip = explode('.', $nip_karyawan);
         $counter_nip = intval($explode_nip[1]);
         
-        return 'bjlgroup_'.$counter_nip;
+        return 'bjlgroup'.$counter_nip;
+    }
+
+    public function select_lokasi_kerja($params = [])
+    {
+        $start = isset($params['start']) ? $params['start'] : 0;
+        $limit = isset($params['limit']) ? $params['limit'] : 20;
+        $search = isset($params['search']) ? $params['search'] : '';
+
+        $search = $this->db->escape_str($search);
+
+        $query = $this->db->query("SELECT
+                    id AS id,
+                    lokasi AS text,
+                    COUNT(1) OVER() AS total_record
+                FROM ms_scan_log msl
+                WHERE msl.status = '1'
+                    AND msl.lokasi LIKE '%$search%'
+                LIMIT $start, $limit");
+
+        return $query;
     }
 }

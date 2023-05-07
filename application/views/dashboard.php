@@ -18,22 +18,17 @@
                                 <div class="col-lg-3 col-xxl-12">
                                     <div class="card card-bordered bg-info text-light">
                                         <div class="card-inner">
-                                            <div class="card-title-group align-start mb-0">
-                                                <div class="card-title">
-                                                    <h6 class="fs-22px text-light">
-                                                        <em class="icon ni ni-users-fill"></em>
-                                                    </h6>
-                                                </div>
-                                            </div>
                                             <div class="card-amount">
                                                 <span class="amount text-light">
-                                                    Jumlah <br> Karyawan
+                                                    <?= $total_karyawan ?>
                                                 </span>
                                             </div>
                                             <div class="invest-data">
                                                 <div class="invest-data-amount g-2">
-                                                    <div class="invest-data-history">
-                                                        <div class="amount text-light fw-bold"><?= $total_karyawan ?></div>
+                                                    <div class="invest-data-history me-0">
+                                                        <div class="amount text-light fw-bold">
+                                                            <em class="icon ni ni-users-fill me-1"></em> Jumlah Karyawan
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -43,22 +38,17 @@
                                 <div class="col-lg-3 col-xxl-12">
                                     <div class="card card-bordered bg-danger text-light">
                                         <div class="card-inner">
-                                            <div class="card-title-group align-start mb-0">
-                                                <div class="card-title">
-                                                    <h6 class="fs-22px text-light">
-                                                        <em class="icon ni ni-calendar-alt-fill"></em>
-                                                    </h6>
-                                                </div>
-                                            </div>
                                             <div class="card-amount">
                                                 <span class="amount text-light">
-                                                    Karyawan <br> Izin
+                                                    <?= $total_karyawan_ijin ?>
                                                 </span>
                                             </div>
                                             <div class="invest-data">
                                                 <div class="invest-data-amount g-2">
-                                                    <div class="invest-data-history">
-                                                        <div class="amount text-light fw-bold"><?= $total_karyawan_ijin ?></div>
+                                                    <div class="invest-data-history me-0">
+                                                        <div class="amount text-light fw-bold">
+                                                        <em class="icon ni ni-calendar-alt-fill me-1"></em> Karyawan Izin
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -68,22 +58,17 @@
                                 <div class="col-lg-3 col-xxl-12">
                                     <div class="card card-bordered bg-warning text-light">
                                         <div class="card-inner">
-                                            <div class="card-title-group align-start mb-0">
-                                                <div class="card-title">
-                                                    <h6 class="fs-22px text-light">
-                                                        <em class="icon ni ni-clock-fill"></em>
-                                                    </h6>
-                                                </div>
-                                            </div>
                                             <div class="card-amount">
                                                 <span class="amount text-light">
-                                                    Karyawan <br> Terlambat
+                                                    <?= $total_karyawan_terlambat ?>
                                                 </span>
                                             </div>
                                             <div class="invest-data">
                                                 <div class="invest-data-amount g-2">
-                                                    <div class="invest-data-history"> 
-                                                        <div class="amount text-light fw-bold"><?= $total_karyawan_terlambat ?></div>
+                                                    <div class="invest-data-history me-0"> 
+                                                        <div class="amount text-light fw-bold">
+                                                            <em class="icon ni ni-clock-fill"></em> Karyawan Terlambat
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -93,22 +78,17 @@
                                 <div class="col-lg-3 col-xxl-12">
                                     <div class="card card-bordered bg-success text-light">
                                         <div class="card-inner">
-                                            <div class="card-title-group align-start mb-0">
-                                                <div class="card-title">
-                                                    <h6 class="fs-22px text-light">
-                                                        <em class="icon ni ni-calendar-check-fill"></em>
-                                                    </h6>
-                                                </div>
-                                            </div>
                                             <div class="card-amount">
                                                 <span class="amount text-light">
-                                                    Karyawan <br> Hadir
+                                                    <?= $total_karyawan_hadir ?>
                                                 </span>
                                             </div>
                                             <div class="invest-data">
                                                 <div class="invest-data-amount g-2">
-                                                    <div class="invest-data-history">
-                                                        <div class="amount text-light fw-bold"><?= $total_karyawan_hadir ?></div>
+                                                    <div class="invest-data-history me-2">
+                                                        <div class="amount text-light fw-bold">
+                                                            <em class="icon ni ni-calendar-check-fill me-1"></em> Karyawan Hadir
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -78,6 +78,8 @@ class Karyawan_model extends CI_Model
         $divisi = isset($params['divisi']) ? $params['divisi'] : '';
         $username = isset($params['username']) ? $params['username'] : '';
         $jabatan = isset($params['jabatan']) ? $params['jabatan'] : '';
+        $lokasi_kerja = isset($params['lokasi_kerja']) ? $params['lokasi_kerja'] : '';
+        $is_admin = isset($params['is_admin']) ? $params['is_admin'] : '';
         $pass_foto = isset($params['pass_foto']) ? $params['pass_foto'] : '';
 
         $this->db->trans_begin();
@@ -91,13 +93,13 @@ class Karyawan_model extends CI_Model
                     nip, nama, alamat, jenis_kelamin, 
                     email, username, password, foto_profile, 
                     phone, nik, tgl_lahir, id_agama, 
-                    id_divisi, id_jabatan, status_kawin
+                    id_divisi, id_jabatan, id_lokasi_kerja, status_kawin, is_admin
                 )
                 VALUES (
                     '".$nip."', '".$nama."', '".$alamat_lengkap."', '".$jenis_kelamin."',
                     '".$email."', '".$username."', AES_ENCRYPT('".$password."', '".$nip."'), '".$pass_foto."',
                     '".$phone."', '".$nik."', '".$tanggal_lahir."', '".$agama."',
-                    '".$divisi."', '".$jabatan."', '".$status_kawin."'
+                    '".$divisi."', '".$jabatan."', '".$lokasi_kerja."', '".$status_kawin."', '".$is_admin."',
                 )
             ");
         } else {
@@ -114,7 +116,9 @@ class Karyawan_model extends CI_Model
                     id_agama = '$agama',
                     id_divisi = '$divisi',
                     id_jabatan = '$jabatan',
-                    status_kawin = '$status_kawin'
+                    status_kawin = '$status_kawin',
+                    id_lokasi_kerja = '$lokasi_kerja',
+                    is_admin = $is_admin
                 WHERE nip = '$nip'");
         }
 

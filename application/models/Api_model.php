@@ -16,7 +16,8 @@ class Api_model extends CI_Model
                 mk.email, mk.phone AS no_telp,
                 mk.nik, mk.tgl_lahir,
                 mk.jenis_kelamin, ma.agama,
-                mk.alamat, mk.status_kawin AS status_pernikahan
+                mk.alamat, mk.status_kawin AS status_pernikahan,
+                mk.is_admin
             FROM ms_karyawan mk
             INNER JOIN ms_agama ma ON ma.id = mk.id_agama
             INNER JOIN ms_divisi md ON md.id = mk.id_divisi
@@ -29,9 +30,10 @@ class Api_model extends CI_Model
 
     public function get_detail_karyawan($nip = '')
     {
+        $base_url = site_url('assets/upload/scanlog');
         $query = $this->db->query("SELECT
                 mk.nip, mk.nama, 
-                mk.foto_profile AS profile,
+                CONCAT('$base_url', mk.foto_profile) AS profile,
                 md.divisi, mj.jabatan,
                 mk.email, mk.phone AS no_telp,
                 mk.nik, mk.tgl_lahir,
@@ -159,67 +161,76 @@ class Api_model extends CI_Model
         $current_latitude = isset($params['latitude']) ? $params['latitude'] : '';
         $current_longtitude = isset($params['longtitude']) ? $params['longtitude'] : '';
 
-        $rule_scan = $this->db->get('ms_scan_log')->row_array();
-        $latitude = $rule_scan['latitude'];
-        $longtitude = $rule_scan['longtitude'];
-        $status_absen = '1';
+        $lokasi_kerja = $this->get_lokasi_kerja($nip);
 
-        $get_radius = radius_calculate($latitude, $longtitude, $current_latitude, $current_longtitude);
-        
-        if ($get_radius > $rule_scan['radius']) {
-
-            return '2';
-        }
-
-		$config_upload['allowed_types'] = 'jpg|jpeg|png';
-		$config_upload['max_size'] = 10000;
-		$config_upload['file_ext_tolower'] = true;
-
-        if ($_FILES['foto']['size'] > 0) {
-            $config_upload['upload_path'] = './assets/upload/scanlog';
-            $config_upload['file_name'] = time() . '_' . str_random(5);
-
-            $this->upload->initialize($config_upload);
-
-            if ($this->upload->do_upload('foto')) {
-                $uploaded_file_fb = $this->upload->data();
-
-                $foto = $uploaded_file_fb['file_name'];
-            }
-        }
-
-        $this->db->trans_begin();
-
-        if ($flag_scan == '1') {
-            if (strtotime($jam) > strtotime($rule_scan['jam_masuk'])) {
-                # jika jam scan lebih dari jam masuk
-                # maka status absen telat
-                $status_absen = '2';
-            } else {
-
-                $status_absen = '1';
-            }
-        }
-
-        $data_scan = [
-            'nip' => $nip,
-            'tanggal' => $tanggal,
-            'jam' => $jam,
-            'flag_scan' => $flag_scan,
-            'status_absen' => $status_absen,
-            'foto' => $foto
-        ];
-
-        $this->db->insert('absensi_karyawan', $data_scan);
-
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-
-            return '0';
+        if (empty($lokasi_kerja)) {
+            
+            return '3';
         } else {
-            $this->db->trans_commit();
 
-            return '1';
+            $rule_scan = $this->db->get('ms_scan_log')->row_array();
+            $latitude = $lokasi_kerja['latitude'];
+            $longtitude = $lokasi_kerja['longtitude'];
+            $status_absen = '1';
+    
+            $get_radius = radius_calculate($latitude, $longtitude, $current_latitude, $current_longtitude);
+            
+            if ($get_radius > $rule_scan['radius']) {
+    
+                return '2';
+            } else {
+                
+                $config_upload['allowed_types'] = 'jpg|jpeg|png';
+                $config_upload['max_size'] = 10000;
+                $config_upload['file_ext_tolower'] = true;
+        
+                if ($_FILES['foto']['size'] > 0) {
+                    $config_upload['upload_path'] = './assets/upload/scanlog';
+                    $config_upload['file_name'] = time() . '_' . str_random(5);
+        
+                    $this->upload->initialize($config_upload);
+        
+                    if ($this->upload->do_upload('foto')) {
+                        $uploaded_file_fb = $this->upload->data();
+        
+                        $foto = $uploaded_file_fb['file_name'];
+                    }
+                }
+        
+                $this->db->trans_begin();
+        
+                if ($flag_scan == '1') {
+                    if (strtotime($jam) > strtotime($rule_scan['jam_masuk'])) {
+                        # jika jam scan lebih dari jam masuk
+                        # maka status absen telat
+                        $status_absen = '2';
+                    } else {
+        
+                        $status_absen = '1';
+                    }
+                }
+        
+                $data_scan = [
+                    'nip' => $nip,
+                    'tanggal' => $tanggal,
+                    'jam' => $jam,
+                    'flag_scan' => $flag_scan,
+                    'status_absen' => $status_absen,
+                    'foto' => $foto
+                ];
+        
+                $this->db->insert('absensi_karyawan', $data_scan);
+        
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+        
+                    return '0';
+                } else {
+                    $this->db->trans_commit();
+        
+                    return '1';
+                }
+            }
         }
     }
 
@@ -386,5 +397,97 @@ class Api_model extends CI_Model
                 }
             }
         }
+    }
+
+    public function get_lokasi_kerja($nip = '')
+    {
+        $query = $this->db->query("SELECT
+                        msl.*
+                    FROM ms_scan_log msl
+                    INNER JOIN ms_karyawan mk ON mk.id_lokasi_kerja = msl.id
+                    WHERE mk.nip = '$nip'");
+
+        return $query->row_array();
+    }
+
+    public function get_current_scanlog($nip = '')
+    {
+        $query = $this->db->query("SELECT 
+                    IFNULL(sm.jam_masuk, '00:00') AS jam_masuk,
+                    IFNULL(sp.jam_pulang, '00:00') AS jam_pulang
+                FROM ms_karyawan mk
+                LEFT JOIN (
+                    SELECT ak.nip,
+                        DATE_FORMAT(ak.jam, '%H:%i') AS jam_masuk
+                    FROM absensi_karyawan ak 
+                    INNER JOIN (
+                        SELECT MAX(ak.id) AS id
+                        FROM absensi_karyawan ak
+                        WHERE ak.status = '1'
+                            AND ak.flag_scan = '1'
+                            AND ak.tanggal = DATE(NOW())  
+                        GROUP BY ak.nip, ak.tanggal
+                    ) ls ON ls.id = ak.id
+                    WHERE ak.nip = '$nip'
+                ) sm ON sm.nip = mk.nip
+                LEFT JOIN (
+                    SELECT ak.nip,
+                        DATE_FORMAT(ak.jam, '%H:%i') AS jam_pulang
+                    FROM absensi_karyawan ak 
+                    INNER JOIN (
+                        SELECT MAX(ak.id) AS id
+                        FROM absensi_karyawan ak
+                        WHERE ak.status = '1'
+                            AND ak.flag_scan = '2'
+                            AND ak.tanggal = DATE(NOW())  
+                        GROUP BY ak.nip, ak.tanggal
+                    ) ls ON ls.id = ak.id
+                    WHERE ak.nip = '$nip'
+                ) sp ON sp.nip = mk.nip
+                WHERE mk.nip = '$nip'");
+
+        return $query->row_array();
+    }
+
+    public function get_history_ijin($nip = '')
+    {
+        $query = $this->db->query("SELECT
+                    CASE
+                        WHEN ik.jenis_ijin = 1 THEN 'Keluar Kantor'
+                        ELSE 'Pulang Awal'
+                    END AS jenis_ijin,
+                    CONCAT(ik.tanggal, ' ', ik.jam) AS tanggal_ijin,
+                    ik.keterangan,
+                    ik.status_ijin,
+                    CASE
+                        WHEN ik.status = 1 THEN 'Pengajuan'
+                        WHEN ik.status = 2 THEN 'Disetujui'
+                        WHEN ik.status = 3 THEN 'Ditolak'
+                        WHEN ik.status = 4 THEN 'Batal'
+                    END AS text_status_ijin
+                FROM ijin_karyawan ik 
+                WHERE ik.nip = '$nip'
+                    AND ik.status = '1'");
+
+        return $query->result_array();
+    }
+
+    public function get_history_cuti($nip = '')
+    {
+        $query = $this->db->query("SELECT
+                    CONCAT(ck.tgl_mulai, ' - ', ck.tgl_selesai) AS tanggal_cuti,
+                    ck .keterangan,
+                    ck .status_cuti,
+                    CASE
+                        WHEN ck.status = 1 THEN 'Pengajuan'
+                        WHEN ck.status = 2 THEN 'Disetujui'
+                        WHEN ck.status = 3 THEN 'Ditolak'
+                        WHEN ck.status = 4 THEN 'Batal'
+                    END AS text_status_cuti
+                FROM cuti_karyawan ck 
+                WHERE ck.nip = '$nip'
+                    AND ck.status = '1'");
+
+        return $query->result_array();
     }
 }

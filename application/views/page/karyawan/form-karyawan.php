@@ -164,6 +164,20 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="form-label">Lokasi Kerja</label>
+                                            <div class="form-control-wrap">
+                                                <div class="form-control-wrap">
+                                                    <select class="form-select" data-search="on" id="__LokasiKerja" name="lokasi_kerja">
+                                                        <?php if (!empty($karyawan['id_lokasi_kerja'])): ?>
+                                                            <option value="<?= $karyawan['id_lokasi_kerja'] ?>">
+                                                                <?= $karyawan['lokasi_kerja'] ?>
+                                                            </option>
+                                                        <?php endif ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-label">
                                                 Pass Foto
                                             </label>
@@ -206,6 +220,29 @@
                                                             </option>
                                                         <?php endif ?>
                                                     </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                Posisi Karyawan <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <div class="row p-1">
+                                                    <div class="col-md-3">
+                                                        <div class="g">
+                                                            <div class="custom-control custom-control-sm custom-radio checked">
+                                                                <input type="radio" class="custom-control-input" name="is_admin" id="__PosisiKaryawan" <?= isset($karyawan['is_admin']) ? (($karyawan['is_admin'] == '0') ? 'checked' : '') : 'checked' ?> value="0">
+                                                                <label class="custom-control-label" for="__PosisiKaryawan">Karyawan</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="custom-control custom-control-sm custom-radio checked">
+                                                            <input type="radio" class="custom-control-input" name="is_admin" id="__PosisiAdmin" <?= isset($karyawan['is_admin']) ? (($karyawan['is_admin'] == '1') ? 'checked' : '') : '' ?> value="1">
+                                                            <label class="custom-control-label" for="__PosisiAdmin">Admin</label>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

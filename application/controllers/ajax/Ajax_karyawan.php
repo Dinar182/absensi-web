@@ -197,6 +197,14 @@ class Ajax_karyawan extends CI_Controller
                     'required' => '%s harus diisi',
                 ]
             ],
+            [
+                'field' => 'lokasi_kerja',
+                'label' => 'Lokasi Kerja',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '%s harus diisi',
+                ]
+            ],
         ];
 
         $this->form_validation->set_rules($validator);
@@ -265,6 +273,8 @@ class Ajax_karyawan extends CI_Controller
                 'divisi' => $this->input->post('divisi'),
                 'username' => $this->input->post('username'),
                 'jabatan' => $this->input->post('jabatan'),
+                'lokasi_kerja' => $this->input->post('lokasi_kerja'),
+                'is_admin' => $this->input->post('is_admin'),
                 'pass_foto' => $pass_foto,
             ];
 

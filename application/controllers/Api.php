@@ -42,7 +42,7 @@ class Api extends CI_Controller
             
             if ($this->form_validation->run() === false) {
                 $meta_status = 400;
-                $meta_message = $this->form_validation->error_string();
+                $meta_message = htmlspecialchars($this->form_validation->error_string());
 
             } else {
                 $username = $this->input->post('username');
@@ -55,24 +55,31 @@ class Api extends CI_Controller
                     $meta_message = 'Username / Password salah!';
     
                 } else {
-                    $meta_status = 200;
-                    $meta_message = 'Berhasil login !';
 
-                    $token_payload = $check_user;
-                    $token_payload['expired'] = time() + 500000;
+                    if ($check_user['is_admin'] == 1) {
+                        $meta_status = 400;
+                        $meta_message = 'Anda tidak memiliki akses ke aplikasi!';
 
-                    $encode_data = json_encode($token_payload);
-                    $user_token = token_encrypt($encode_data);
-
-                    $this->db->where('nip', $check_user['nip'])
-                        ->update('ms_karyawan', [
-                            'user_token' => $user_token
-                        ]);
+                    } else {
+                        $meta_status = 200;
+                        $meta_message = 'Berhasil login !';
     
-                    $data = [
-                        'karyawan' => $check_user,
-                        'token' => $user_token
-                    ];
+                        $token_payload = $check_user;
+                        $token_payload['expired'] = time() + 500000;
+    
+                        $encode_data = json_encode($token_payload);
+                        $user_token = token_encrypt($encode_data);
+    
+                        $this->db->where('nip', $check_user['nip'])
+                            ->update('ms_karyawan', [
+                                'user_token' => $user_token
+                            ]);
+        
+                        $data = [
+                            'karyawan' => $check_user,
+                            'token' => $user_token
+                        ];
+                    }
                 }
             }
         }
@@ -504,6 +511,11 @@ class Api extends CI_Controller
                             $meta_status = 400;
                             $meta_message = 'Anda tidak dalam radius yang valid';
                             break;
+
+                        case '3':
+                            $meta_status = 400;
+                            $meta_message = 'Lokasi kerja belum terdaftar';
+                            break;
                         
                         default:
                             $meta_status = 400;
@@ -690,5 +702,143 @@ class Api extends CI_Controller
         }
 
         response_api($meta_status, $meta_message);
+    }
+
+    public function current_scanlog()
+    {
+        $data = [];
+
+        if ($this->input->method() != 'post') {
+            $meta_status = 405;
+            $meta_message = 'Request method not allowed';
+
+        } else {
+            $validator = [
+                [
+                    'field' => 'nip',
+                    'label' => 'Karyawan',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '%s tidak berlaku'
+                    ]
+                ]
+            ];
+
+            $this->form_validation->set_rules($validator);
+            
+            if ($this->form_validation->run() === false) {
+                $meta_status = 400;
+                $meta_message = $this->form_validation->error_string();
+
+            } else {
+                $nip = $this->input->post('nip');
+                $get_current_scan = $this->api_model->get_current_scanlog($nip);
+    
+                if (empty($get_current_scan)) {
+                    $meta_status = 400;
+                    $meta_message = 'Karyawan tidak ditemukan';
+    
+                } else {
+                    $meta_status = 200;
+                    $meta_message = 'Berhasil memuat data';
+
+                    $data = $get_current_scan;
+                }
+            }
+        }
+
+        response_api($meta_status, $meta_message, $data);
+    }
+
+    public function history_ijin()
+    {
+        $data = [];
+
+        if ($this->input->method() != 'post') {
+            $meta_status = 405;
+            $meta_message = 'Request method not allowed';
+
+        } else {
+            $validator = [
+                [
+                    'field' => 'nip',
+                    'label' => 'Karyawan',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '%s tidak berlaku'
+                    ]
+                ]
+            ];
+
+            $this->form_validation->set_rules($validator);
+            
+            if ($this->form_validation->run() === false) {
+                $meta_status = 400;
+                $meta_message = $this->form_validation->error_string();
+
+            } else {
+                $nip = $this->input->post('nip');
+                $get_history_ijin = $this->api_model->get_history_ijin($nip);
+    
+                if (empty($get_history_ijin)) {
+                    $meta_status = 400;
+                    $meta_message = 'Karyawan tidak ditemukan';
+    
+                } else {
+                    $meta_status = 200;
+                    $meta_message = 'Berhasil memuat data';
+
+                    $data = $get_history_ijin;
+                }
+            }
+        }
+
+        response_api($meta_status, $meta_message, $data);
+    }
+
+    public function history_cuti()
+    {
+        $data = [];
+
+        if ($this->input->method() != 'post') {
+            $meta_status = 405;
+            $meta_message = 'Request method not allowed';
+
+        } else {
+            $validator = [
+                [
+                    'field' => 'nip',
+                    'label' => 'Karyawan',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '%s tidak berlaku'
+                    ]
+                ]
+            ];
+
+            $this->form_validation->set_rules($validator);
+            
+            if ($this->form_validation->run() === false) {
+                $meta_status = 400;
+                $meta_message = $this->form_validation->error_string();
+
+            } else {
+                $nip = $this->input->post('nip');
+                $get_history_cuti = $this->api_model->get_history_cuti($nip);
+    
+                if (empty($get_history_cuti)) {
+                    $meta_status = 400;
+                    $meta_message = 'Karyawan tidak ditemukan';
+    
+                } else {
+                    $meta_status = 200;
+                    $meta_message = 'Berhasil memuat data';
+
+                    $data = $get_history_cuti;
+                }
+            }
+        }
+
+        response_api($meta_status, $meta_message, $data);
     }
 }

@@ -15,6 +15,7 @@
                     <div class="card-inner">
                         <div class="preview-block">
                             <form action="#" class="ajax-form" method="post" id="__formSimpanSettingAbsensi" enctype="multipart/form-data">
+                            <input type="hidden" name="id_lokasi" value="<?= isset($data['id']) ? $data['id'] : 0 ?>" readonly>
                                 <span class="preview-title-lg overline-title">Data Umum</span>
                                 <div class="row gy-4">
                                     <div class="col-sm-6">
@@ -23,7 +24,7 @@
                                                 Jam Masuk <span class="text-danger">*</span>
                                             </label>
                                             <div class="form-control-wrap">
-                                                <input type="time" class="form-control" name="jam_masuk" value="<?= $data['jam_masuk'] ?>" placeholder="Jam Masuk ...">
+                                                <input type="time" class="form-control" name="jam_masuk" value="<?= isset($data['jam_masuk']) ? $data['jam_masuk'] : '' ?>" placeholder="Jam Masuk ...">
                                             </div>
                                         </div>
                                     </div>
@@ -33,7 +34,7 @@
                                                 Jam Pulang <span class="text-danger">*</span>
                                             </label>
                                             <div class="form-control-wrap">
-                                                <input type="time" class="form-control" name="jam_pulang" value="<?= $data['jam_pulang'] ?>" placeholder="Jam Pulang ...">
+                                                <input type="time" class="form-control" name="jam_pulang" value="<?= isset($data['jam_pulang']) ? $data['jam_pulang'] : '' ?>" placeholder="Jam Pulang ...">
                                             </div>
                                         </div>
                                     </div>
@@ -46,7 +47,7 @@
                                                 <div class="form-icon form-icon-right">
                                                     <em class="icon ni ni-rss"></em>
                                                 </div>
-                                                <input type="number" class="form-control" name="radius" value="<?= $data['radius'] ?>" placeholder="Radius Absensi (Meter)">
+                                                <input type="number" class="form-control" name="radius" value="<?= isset($data['radius']) ? $data['radius'] : '' ?>" placeholder="Radius Absensi (Meter)">
                                             </div>
                                         </div>
                                     </div>
@@ -59,7 +60,7 @@
                                                 <div class="form-icon form-icon-right">
                                                     <em class="icon ni ni-map-pin"></em>
                                                 </div>
-                                                <input type="text" class="form-control" name="koordinat" value="<?= $data['latitude'].', '.$data['longtitude'] ?>" placeholder="Koordinat Absensi ...">
+                                                <input type="text" class="form-control" name="koordinat" value="<?= isset($data['latitude']) ? $data['latitude'].', '.$data['longtitude'] : '' ?>" placeholder="Koordinat Absensi ...">
                                             </div>
                                         </div>
                                     </div>

@@ -115,6 +115,7 @@ class Rekap_model extends CI_Model
                     GROUP BY ck.nip
                 ) ct ON ct.nip = mk.nip
                 WHERE mk.status = '1'
+                    AND mk.is_admin = 0
                     AND (
                         mk.nip LIKE '%$search%'
                         OR mk.nama LIKE '%$search%'

@@ -103,7 +103,7 @@
                                     <h6 class="overline-title text-primary-alt">Setting</h6>
                                 </li>
                                 <li class="nk-menu-item">
-                                    <a href="<?= site_url('setting') ?>" class="nk-menu-link">
+                                    <a href="<?= site_url('setting/setting_lokasi_kerja') ?>" class="nk-menu-link">
                                         <span class="nk-menu-icon">
                                             <em class="icon ni ni-setting"></em>
                                         </span>

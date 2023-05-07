@@ -99,4 +99,34 @@ class Ajax_master extends CI_Controller
 
         response_json($response);
     }
+
+    public function select_lokasi_kerja()
+    {
+        $start = $this->input->get('page');
+        $limit = 20;
+        $search = $this->input->get('search');
+
+        if ($start <= 0) {
+            $start = 1;
+        }
+
+        $param_model = [
+            'start' => ceil($start - 1),
+            'limit' => $limit,
+            'search' => $search
+        ];
+
+        $get_lokasi = $this->master_model->select_lokasi_kerja($param_model);
+        $select_lokasi = $get_lokasi->result_array();
+        $count_lokasi = $get_lokasi->row_array();
+
+        $response = [
+            'results' => $select_lokasi,
+            'pagination' => [
+                'more' => ($start * $limit) < isset($count_lokasi->total_record) ? $count_lokasi->total_record : 0
+            ]
+        ];
+
+        response_json($response);
+    }
 }

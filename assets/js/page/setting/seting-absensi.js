@@ -27,6 +27,10 @@ $('#__SubmitSimpanSetting').on('click', function(){
                     alert: 'success',
                     position: 'top-right'
                 });
+
+                setTimeout(() => {
+                    window.location.href = base_url + 'setting/setting_lokasi_kerja'
+                }, 1500);
             }
         },
         error : function(jqXHR, textStatus, errorThrow){

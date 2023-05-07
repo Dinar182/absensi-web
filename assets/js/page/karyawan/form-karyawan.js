@@ -58,6 +58,26 @@ const select_jabatan = () => {
     });
 }
 
+const select_lokasi_kerja = () => {
+    NioApp.Select2('#__LokasiKerja', {
+        placeholder: '- Pilih Lokasi Kerja -',
+        allowClear: true,
+        ajax: {
+            type: 'GET',
+            url: base_url_ajax + '/ajax_master/select_lokasi_kerja',
+            data: function(params) {
+                let query = {
+                    search: params.term,
+                    page: params.page || 1
+                };
+
+                return query;
+            },
+            delay: 500
+        }
+    });
+}
+
 $('#__SubmitKaryawan').on('click', function(){
     Swal.fire({
         title: 'Yakin ingin memproses?',
@@ -110,5 +130,6 @@ window.onload = (event) => {
     select_agama();
     select_divisi();
     select_jabatan();
+    select_lokasi_kerja();
 
 };
