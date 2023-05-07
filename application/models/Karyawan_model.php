@@ -86,7 +86,7 @@ class Karyawan_model extends CI_Model
             $nip = $this->master_model->generate_nip();
             $password = $this->master_model->password_generate($nip);
 
-            $this->db->query("INSERT INTO ms_karyawan 
+            $this->db->query("INSERT INTO ms_karyawan
                 (
                     nip, nama, alamat, jenis_kelamin, 
                     email, username, password, foto_profile, 
@@ -95,7 +95,7 @@ class Karyawan_model extends CI_Model
                 )
                 VALUES (
                     '".$nip."', '".$nama."', '".$alamat_lengkap."', '".$jenis_kelamin."',
-                    '".$email."', '".$username."', AES_ENCRYPT('".$nip."', '".$password."'), '".$pass_foto."',
+                    '".$email."', '".$username."', AES_ENCRYPT('".$password."', '".$nip."'), '".$pass_foto."',
                     '".$phone."', '".$nik."', '".$tanggal_lahir."', '".$agama."',
                     '".$divisi."', '".$jabatan."', '".$status_kawin."'
                 )
