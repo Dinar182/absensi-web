@@ -4,6 +4,14 @@ class Api extends CI_Controller
 {
     function __construct()
     {
+		header("Access-Control-Allow-Origin: *"); 
+        header("Access-Control-Allow-Methods: POST, OPTIONS"); 
+        header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method"); 
+        header("Access-Control-Max-Age: 86400");
+        header("Access-Control-Allow-Credentials: true");
+        $method = $_SERVER['REQUEST_METHOD']; 
+        if($method == "OPTIONS") { die(); }
+		
         parent::__construct();
         $this->load->model('api_model');
     }
