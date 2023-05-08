@@ -48,6 +48,14 @@ class Setting extends CI_Controller
     {
         $validator = [
             [
+                'field' => 'lokasi_kerja',
+                'label' => 'Lokasi',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '%s harus diisi',
+                ]
+            ],
+            [
                 'field' => 'jam_masuk',
                 'label' => 'Jam Masuk',
                 'rules' => 'required',
@@ -89,6 +97,7 @@ class Setting extends CI_Controller
 
         } else {
             $id_lokasi = $this->input->post('id_lokasi');
+            $lokasi_kerja = $this->input->post('lokasi_kerja');
             $jam_masuk = $this->input->post('jam_masuk');
             $jam_pulang = $this->input->post('jam_pulang');
             $radius = $this->input->post('radius');
@@ -101,6 +110,7 @@ class Setting extends CI_Controller
 
             if ($id_lokasi == 0) {
                 $process_lokasi = $this->db->insert('ms_scan_log', [
+                    'lokasi' => $lokasi_kerja,
                     'jam_masuk' => $jam_masuk,
                     'jam_pulang' => $jam_pulang,
                     'radius' => $radius,
@@ -112,6 +122,7 @@ class Setting extends CI_Controller
 
                 $process_lokasi = $this->db->where('id', $id_lokasi)
                     ->update('ms_scan_log', [
+                        'lokasi' => $lokasi_kerja,
                         'jam_masuk' => $jam_masuk,
                         'jam_pulang' => $jam_pulang,
                         'radius' => $radius,

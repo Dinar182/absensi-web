@@ -30,7 +30,8 @@ class Api_model extends CI_Model
 
     public function get_detail_karyawan($nip = '')
     {
-        $base_url = site_url('assets/upload/scanlog');
+        $base_url = site_url('assets/upload/pass-foto/');
+
         $query = $this->db->query("SELECT
                 mk.nip, mk.nama, 
                 CONCAT('$base_url', mk.foto_profile) AS profile,
@@ -489,5 +490,38 @@ class Api_model extends CI_Model
                     AND ck.status = '1'");
 
         return $query->result_array();
+    }
+
+    public function store_log_post_data()
+    {
+        if ($this->input->method() != 'post') {
+            return false;
+        }
+
+        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+            $url = "https"; 
+        } else {
+            $url = "http"; 
+        }
+
+        $url .= "://";         
+        $url .= $_SERVER['HTTP_HOST'];         
+        $url .= $_SERVER['REQUEST_URI'];
+
+        $data = $this->input->post(NULL, true);
+
+        if (empty($data)) {
+            $data = get_body_json();
+        }
+
+
+        $this->db->insert('log_post_data', [
+            'controller' => $this->router->fetch_class(),
+            'method' => $this->router->fetch_method(),
+            'url' => $url,
+            'header' => json_encode($this->input->request_headers()),
+            'data' => json_encode($data),
+            'ip_address' => $this->input->ip_address()
+        ]);
     }
 }

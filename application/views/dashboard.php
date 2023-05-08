@@ -19,7 +19,7 @@
                                     <div class="card card-bordered bg-info text-light">
                                         <div class="card-inner">
                                             <div class="card-amount">
-                                                <span class="amount text-light">
+                                                <span class="amount text-light" style="font-size: 2rem;">
                                                     <?= $total_karyawan ?>
                                                 </span>
                                             </div>
@@ -39,7 +39,7 @@
                                     <div class="card card-bordered bg-danger text-light">
                                         <div class="card-inner">
                                             <div class="card-amount">
-                                                <span class="amount text-light">
+                                                <span class="amount text-light" style="font-size: 2rem;">
                                                     <?= $total_karyawan_ijin ?>
                                                 </span>
                                             </div>
@@ -59,7 +59,7 @@
                                     <div class="card card-bordered bg-warning text-light">
                                         <div class="card-inner">
                                             <div class="card-amount">
-                                                <span class="amount text-light">
+                                                <span class="amount text-light" style="font-size: 2rem;">
                                                     <?= $total_karyawan_terlambat ?>
                                                 </span>
                                             </div>
@@ -79,7 +79,7 @@
                                     <div class="card card-bordered bg-success text-light">
                                         <div class="card-inner">
                                             <div class="card-amount">
-                                                <span class="amount text-light">
+                                                <span class="amount text-light" style="font-size: 2rem;">
                                                     <?= $total_karyawan_hadir ?>
                                                 </span>
                                             </div>

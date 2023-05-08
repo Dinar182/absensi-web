@@ -255,7 +255,7 @@
 
                 <div class="row py-3">
                     <div class="col-md-6 offset-md-6 text-end">
-                        <a href="<?= site_url('karayawan') ?>" class="btn btn-light">
+                        <a href="<?= site_url('karyawan') ?>" class="btn btn-light">
                             <span>Kembali</span>
                             <em class="icon ni ni-back-alt"></em>
                         </a>

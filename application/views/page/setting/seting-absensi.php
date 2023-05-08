@@ -21,10 +21,23 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="form-label">
-                                                Jam Masuk <span class="text-danger">*</span>
+                                                Lokasi <span class="text-danger">*</span>
                                             </label>
                                             <div class="form-control-wrap">
-                                                <input type="time" class="form-control" name="jam_masuk" value="<?= isset($data['jam_masuk']) ? $data['jam_masuk'] : '' ?>" placeholder="Jam Masuk ...">
+                                                <input type="text" class="form-control" name="lokasi_kerja" value="<?= isset($data['lokasi']) ? $data['lokasi'] : '' ?>" placeholder="Jam Masuk ...">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                Radius <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <div class="form-icon form-icon-right">
+                                                    <em class="icon ni ni-rss"></em>
+                                                </div>
+                                                <input type="number" class="form-control" name="radius" value="<?= isset($data['radius']) ? $data['radius'] : '' ?>" placeholder="Radius Absensi (Meter)">
                                             </div>
                                         </div>
                                     </div>
@@ -41,13 +54,10 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="form-label">
-                                                Radius <span class="text-danger">*</span>
+                                                Jam Masuk <span class="text-danger">*</span>
                                             </label>
                                             <div class="form-control-wrap">
-                                                <div class="form-icon form-icon-right">
-                                                    <em class="icon ni ni-rss"></em>
-                                                </div>
-                                                <input type="number" class="form-control" name="radius" value="<?= isset($data['radius']) ? $data['radius'] : '' ?>" placeholder="Radius Absensi (Meter)">
+                                                <input type="time" class="form-control" name="jam_masuk" value="<?= isset($data['jam_masuk']) ? $data['jam_masuk'] : '' ?>" placeholder="Jam Masuk ...">
                                             </div>
                                         </div>
                                     </div>

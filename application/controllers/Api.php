@@ -14,6 +14,7 @@ class Api extends CI_Controller
 		
         parent::__construct();
         $this->load->model('api_model');
+        $this->api_model->store_log_post_data();
     }
 
     public function login()
