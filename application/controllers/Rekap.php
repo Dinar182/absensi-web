@@ -19,6 +19,7 @@ class Rekap extends CI_Controller
         $data = [
             'page_title' => 'Laporan Absensi Karyawan',
             'bottom_js_pages' => '
+                <script src="'. site_url('assets/js/datatables/datatable-btns.js?_=') . rand() .'"></script>
                 <script src="'. site_url('assets/js/page/rekap/index.js?_=') . rand() .'"></script>
             '
         ];

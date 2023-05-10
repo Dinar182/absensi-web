@@ -97,25 +97,32 @@ class Api_model extends CI_Model
         $tanggal_selesai = isset($params['tanggal_selesai']) ? $params['tanggal_selesai'] : '';
         $keterangan = isset($params['keterangan']) ? $params['keterangan'] : '';
 
-        $this->db->trans_begin();
+        $get_pengajuan = $this->get_outstanding_cuti_karyawan($nip);
 
-        $data_cuti = [
-            'nip' => $nip,
-            'tgl_mulai' => $tanggal_mulai,
-            'tgl_selesai' => $tanggal_selesai,
-            'keterangan' => $keterangan
-        ];
-
-        $this->db->insert('cuti_karyawan', $data_cuti);
-
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-
-            return '0';
+        if (!empty($get_pengajuan)) {
+            
+            return '2';
         } else {
-            $this->db->trans_commit();
-
-            return '1';
+            $this->db->trans_begin();
+    
+            $data_cuti = [
+                'nip' => $nip,
+                'tgl_mulai' => $tanggal_mulai,
+                'tgl_selesai' => $tanggal_selesai,
+                'keterangan' => $keterangan
+            ];
+    
+            $this->db->insert('cuti_karyawan', $data_cuti);
+    
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+    
+                return '0';
+            } else {
+                $this->db->trans_commit();
+    
+                return '1';
+            }
         }
     }
 
@@ -127,26 +134,33 @@ class Api_model extends CI_Model
         $jam = isset($params['jam']) ? $params['jam'] : '';
         $keterangan = isset($params['keterangan']) ? $params['keterangan'] : '';
 
-        $this->db->trans_begin();
+        $get_pengajuan = $this->get_outstanding_ijin_karyawan($nip);
 
-        $data_ijin = [
-            'nip' => $nip,
-            'jenis_ijin' => $jenis_ijin,
-            'tanggal' => $tanggal,
-            'jam' => $jam,
-            'keterangan' => $keterangan
-        ];
-
-        $this->db->insert('ijin_karyawan', $data_ijin);
-
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-
-            return '0';
+        if (!empty($get_pengajuan)) {
+            
+            return '2';
         } else {
-            $this->db->trans_commit();
-
-            return '1';
+            $this->db->trans_begin();
+    
+            $data_ijin = [
+                'nip' => $nip,
+                'jenis_ijin' => $jenis_ijin,
+                'tanggal' => $tanggal,
+                'jam' => $jam,
+                'keterangan' => $keterangan
+            ];
+    
+            $this->db->insert('ijin_karyawan', $data_ijin);
+    
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+    
+                return '0';
+            } else {
+                $this->db->trans_commit();
+    
+                return '1';
+            }
         }
     }
 
@@ -411,8 +425,10 @@ class Api_model extends CI_Model
         return $query->row_array();
     }
 
-    public function get_current_scanlog($nip = '')
+    public function get_current_scanlog($nip = '', $tanggal = '')
     {
+        $tanggal = ($tanggal == '') ? 'AND ak.tanggal = DATE(NOW())' : "AND ak.tanggal = '$tanggal'";
+
         $query = $this->db->query("SELECT 
                     IFNULL(sm.jam_masuk, '00:00') AS jam_masuk,
                     IFNULL(sp.jam_pulang, '00:00') AS jam_pulang
@@ -426,7 +442,7 @@ class Api_model extends CI_Model
                         FROM absensi_karyawan ak
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '1'
-                            AND ak.tanggal = DATE(NOW())  
+                            $tanggal
                         GROUP BY ak.nip, ak.tanggal
                     ) ls ON ls.id = ak.id
                     WHERE ak.nip = '$nip'
@@ -440,7 +456,7 @@ class Api_model extends CI_Model
                         FROM absensi_karyawan ak
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '2'
-                            AND ak.tanggal = DATE(NOW())  
+                            $tanggal
                         GROUP BY ak.nip, ak.tanggal
                     ) ls ON ls.id = ak.id
                     WHERE ak.nip = '$nip'
@@ -461,10 +477,10 @@ class Api_model extends CI_Model
                     ik.keterangan,
                     ik.status_ijin,
                     CASE
-                        WHEN ik.status = 1 THEN 'Pengajuan'
-                        WHEN ik.status = 2 THEN 'Disetujui'
-                        WHEN ik.status = 3 THEN 'Ditolak'
-                        WHEN ik.status = 4 THEN 'Batal'
+                        WHEN ik.status_ijin = 1 THEN 'Pengajuan'
+                        WHEN ik.status_ijin = 2 THEN 'Disetujui'
+                        WHEN ik.status_ijin = 3 THEN 'Ditolak'
+                        WHEN ik.status_ijin = 4 THEN 'Batal'
                     END AS text_status_ijin
                 FROM ijin_karyawan ik 
                 WHERE ik.nip = '$nip'
@@ -477,19 +493,49 @@ class Api_model extends CI_Model
     {
         $query = $this->db->query("SELECT
                     CONCAT(ck.tgl_mulai, ' - ', ck.tgl_selesai) AS tanggal_cuti,
-                    ck .keterangan,
-                    ck .status_cuti,
+                    ck.keterangan,
+                    ck.status_cuti,
                     CASE
-                        WHEN ck.status = 1 THEN 'Pengajuan'
-                        WHEN ck.status = 2 THEN 'Disetujui'
-                        WHEN ck.status = 3 THEN 'Ditolak'
-                        WHEN ck.status = 4 THEN 'Batal'
+                        WHEN ck.status_cuti = 1 THEN 'Pengajuan'
+                        WHEN ck.status_cuti = 2 THEN 'Disetujui'
+                        WHEN ck.status_cuti = 3 THEN 'Ditolak'
+                        WHEN ck.status_cuti = 4 THEN 'Batal'
                     END AS text_status_cuti
                 FROM cuti_karyawan ck 
                 WHERE ck.nip = '$nip'
                     AND ck.status = '1'");
 
         return $query->result_array();
+    }
+
+    public function get_outstanding_cuti_karyawan($nip = '')
+    {
+        $query = $this->db->query("SELECT
+                    CONCAT(ck.tgl_mulai, ' - ', ck.tgl_selesai) AS tanggal_cuti,
+                    ck.keterangan, ck.status_cuti
+                FROM cuti_karyawan ck 
+                WHERE ck.nip = '$nip'
+                    AND ck.status = '1'
+                    AND ck.status_cuti = '1'");
+
+        return $query->row_array();
+    }
+
+    public function get_outstanding_ijin_karyawan($nip = '')
+    {
+        $query = $this->db->query("SELECT
+                    CASE
+                        WHEN ik.jenis_ijin = 1 THEN 'Keluar Kantor'
+                        ELSE 'Pulang Awal'
+                    END AS jenis_ijin,
+                    CONCAT(ik.tanggal, ' ', ik.jam) AS tanggal_ijin,
+                    ik.keterangan, ik.status_ijin
+                FROM ijin_karyawan ik 
+                WHERE ik.nip = '$nip'
+                    AND ik.status = '1'
+                    AND ik.status_ijin = '1'");
+
+        return $query->row_array();
     }
 
     public function store_log_post_data()

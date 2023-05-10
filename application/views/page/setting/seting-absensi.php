@@ -64,13 +64,26 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="form-label">
-                                                Koordinat <span class="text-danger">*</span>
+                                                Latitude <span class="text-danger">*</span>
                                             </label>
                                             <div class="form-control-wrap">
                                                 <div class="form-icon form-icon-right">
                                                     <em class="icon ni ni-map-pin"></em>
                                                 </div>
-                                                <input type="text" class="form-control" name="koordinat" value="<?= isset($data['latitude']) ? $data['latitude'].', '.$data['longtitude'] : '' ?>" placeholder="Koordinat Absensi ...">
+                                                <input type="text" class="form-control" name="latitude" value="<?= isset($data['latitude']) ? $data['latitude'] : '' ?>" placeholder="Latitude Absensi ...">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                Longitude <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <div class="form-icon form-icon-right">
+                                                    <em class="icon ni ni-map-pin"></em>
+                                                </div>
+                                                <input type="text" class="form-control" name="longtitude" value="<?= isset($data['longtitude']) ? $data['longtitude'] : '' ?>" placeholder="Longitude Absensi ...">
                                             </div>
                                         </div>
                                     </div>

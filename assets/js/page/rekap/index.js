@@ -24,6 +24,16 @@ const data_rekap_absensi = () => {
                 orderable: false
             }
         ],
+		buttons: [
+            {
+                extend: 'pdf',
+                titleAttr:'Export Pdf'
+            },
+            {
+                extend: 'excel',
+                titleAttr:'Export Excel'
+            }
+        ],
         ajax : {
             url : base_url_ajax + "/ajax_rekap/dt_rekap_absensi",
             type : "GET",

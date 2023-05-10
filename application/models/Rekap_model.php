@@ -19,6 +19,17 @@ class Rekap_model extends CI_Model
         $order_dir = isset($params['order_dir']) ? $params['order_dir'] : 'ASC';
 
         $bulan = isset($params['bulan']) ? $params['bulan'] : '';
+        $total_weekend = weekend_count($bulan);
+		if ($bulan < date('m')) {
+            $date = date('Y-m-d', strtotime(date('Y').'-'.$bulan.'-01'));
+			
+		} elseif ($bulan == date('m')) {
+
+			$date = date('Y-m-d');
+		} else {
+
+			$date = 0;
+		}
 
         $query = $this->db->query("SELECT 
                     mk.nip,
@@ -27,9 +38,9 @@ class Rekap_model extends CI_Model
                     IFNULL(lt.jumlah_telat, 0) AS jumlah_telat,
                     CASE 
                         WHEN '$bulan' = DATE_FORMAT(NOW() , '%m')
-                            THEN (CAST((DATE_FORMAT(NOW(), '%d')) AS SIGNED) - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED)) - IFNULL(ct.jumlah_cuti, 0)
+                            THEN (CAST((DATE_FORMAT('$date', '%d')) AS SIGNED) - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED)) - IFNULL(ct.jumlah_cuti, 0) - $total_weekend
                         WHEN '$bulan' < DATE_FORMAT(NOW() , '%m')
-                            THEN (CAST(DAY(LAST_DAY(DATE_FORMAT(NOW() , '%Y-%05-%d'))) AS SIGNED) - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED)) - IFNULL(ct.jumlah_cuti, 0)
+                            THEN (CAST(DAY(LAST_DAY(DATE_FORMAT('$date' , '%Y-%$bulan-%d'))) AS SIGNED) - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED)) - IFNULL(ct.jumlah_cuti, 0) - $total_weekend
                         ELSE 0
                     END AS jumlah_mangkir,
                     IFNULL(ij.jumlah_ijin, 0) AS jumlah_ijin,

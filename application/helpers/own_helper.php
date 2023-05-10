@@ -50,3 +50,32 @@ if (!function_exists('str_random')) {
 		}
 	}
 }
+
+if (!function_exists('weekend_count')) {
+	function weekend_count($month = '')
+	{
+		$weekend_count = 0;
+		$month_filtered = ($month == '') ? date('m') : $month;
+		if ($month < date('m')) {
+			$day = date('t', strtotime(date('Y').'-'.$month.'-t'));
+			
+		} elseif ($month == date('m')) {
+
+			$day = date('j');
+		} else {
+
+			$day = 0;
+		}
+		
+		for ($i = 1; $i <= $day; $i++) {
+			$date = date('Y-'.$month_filtered.'-'.$i);
+			$day_of_week = date('N', strtotime($date));
+		
+			if ($day_of_week > 6) {
+				$weekend_count++;
+			}
+		}
+		
+		return $weekend_count;
+	}
+}

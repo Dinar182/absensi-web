@@ -99,7 +99,7 @@ class Karyawan_model extends CI_Model
                     '".$nip."', '".$nama."', '".$alamat_lengkap."', '".$jenis_kelamin."',
                     '".$email."', '".$username."', AES_ENCRYPT('".$password."', '".$nip."'), '".$pass_foto."',
                     '".$phone."', '".$nik."', '".$tanggal_lahir."', '".$agama."',
-                    '".$divisi."', '".$jabatan."', '".$lokasi_kerja."', '".$status_kawin."', '".$is_admin."',
+                    '".$divisi."', '".$jabatan."', '".$lokasi_kerja."', '".$status_kawin."', '".$is_admin."'
                 )
             ");
         } else {

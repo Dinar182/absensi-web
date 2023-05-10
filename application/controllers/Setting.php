@@ -80,8 +80,16 @@ class Setting extends CI_Controller
                 ]
             ],
             [
-                'field' => 'koordinat',
-                'label' => 'Koordinat',
+                'field' => 'latitude',
+                'label' => 'Latitude',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '%s harus diisi',
+                ]
+            ],
+            [
+                'field' => 'longtitude',
+                'label' => 'Longtitude',
                 'rules' => 'required',
                 'errors' => [
                     'required' => '%s harus diisi',
@@ -102,11 +110,8 @@ class Setting extends CI_Controller
             $jam_pulang = $this->input->post('jam_pulang');
             $radius = $this->input->post('radius');
 
-            $koordinat = $this->input->post('koordinat');
-            $exp_koor = explode(',', $koordinat);
-
-            $latitude = $exp_koor[0];
-            $longtitude = $exp_koor[1];
+            $latitude = $this->input->post('latitude');
+            $longtitude = $this->input->post('longtitude');
 
             if ($id_lokasi == 0) {
                 $process_lokasi = $this->db->insert('ms_scan_log', [

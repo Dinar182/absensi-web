@@ -309,6 +309,11 @@ class Api extends CI_Controller
                             $meta_status = 200;
                             $meta_message = 'Behasil mengajukan cuti!';
                             break;
+
+                        case '2':
+                            $meta_status = 400;
+                            $meta_message = 'Anda masih memiliki Outstanding cuti!';
+                            break;
                         
                         default:
                             $meta_status = 400;
@@ -401,6 +406,11 @@ class Api extends CI_Controller
                         case '1':
                             $meta_status = 200;
                             $meta_message = 'Behasil mengajukan ijin!';
+                            break;
+
+                        case '2':
+                            $meta_status = 400;
+                            $meta_message = 'Anda masih memiliki Outstanding ijin!';
                             break;
                         
                         default:
@@ -741,7 +751,8 @@ class Api extends CI_Controller
 
             } else {
                 $nip = $this->input->post('nip');
-                $get_current_scan = $this->api_model->get_current_scanlog($nip);
+                $tanggal = $this->input->post('tanggal');
+                $get_current_scan = $this->api_model->get_current_scanlog($nip, $tanggal);
     
                 if (empty($get_current_scan)) {
                     $meta_status = 400;
