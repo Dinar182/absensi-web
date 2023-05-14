@@ -29,6 +29,18 @@ class Dashboard_model extends CI_Model
         return $query['total_ijin'];
     }
 
+    public function get_total_karyawan_cuti()
+    {
+        $query = $this->db->query("SELECT 
+                    COUNT(*) AS total_ijin
+                FROM cuti_karyawan ck
+                WHERE ck.status = '1'
+                    AND ck.status_cuti = '2'
+                    AND DATE(NOW()) BETWEEN ck.tgl_mulai AND ck.tgl_selesai")->row_array();
+
+        return $query['total_ijin'];
+    }
+
     public function get_total_karyawan_terlambat()
     {
         $query = $this->db->query("SELECT 
@@ -86,7 +98,10 @@ class Dashboard_model extends CI_Model
                 INNER JOIN ms_karyawan mk ON mk.nip = ak.nip
                 INNER JOIN (
                     SELECT 
-                        MAX(id) AS id_scan
+                        CASE 
+                            WHEN ak.flag_scan = 1 THEN MIN(id)
+                            ELSE MAX(id)
+                        END AS id_scan
                     FROM absensi_karyawan ak
                     WHERE ak.status = '1'
                         AND ak.tanggal = DATE(NOW())    

@@ -25,7 +25,8 @@ class Setting_model extends CI_Model
         $col_name = isset($params['col_name']) ? $params['col_name'] : 'id';
 		$order_dir = isset($params['order_dir']) ? $params['order_dir'] : 'asc';
 
-        $query = $this->db->query("SELECT *
+        $query = $this->db->query("SELECT *,
+                        COUNT(1) OVER() AS total_record
                     FROM ms_scan_log mcl
                     WHERE status = '1'
                         AND (

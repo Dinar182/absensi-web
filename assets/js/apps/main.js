@@ -10,6 +10,10 @@ $('.date-picker').datepicker({
     format: 'yyyy-mm-dd',
 });
 
+$('.date-picker-range').datepicker({
+    format: 'yyyy-mm-dd',
+});
+
 const alert_successfuly = (title, message, direct_uri) => {
     return Swal.fire({
         icon: 'success',
@@ -37,7 +41,7 @@ const basic_alert = (icon, title,message) => {
     });
 }
 
-function toaster_notification ({message, alert, position}) {
+function toaster_notification ({message, alert, position = 'top-right'}) {
     toastr.clear();
 
     return NioApp.Toast(message, alert, {

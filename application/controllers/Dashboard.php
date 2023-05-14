@@ -24,6 +24,7 @@ class Dashboard extends CI_Controller
 
             'total_karyawan' => $this->dashboard_model->get_total_karyawan(),
             'total_karyawan_ijin' => $this->dashboard_model->get_total_karyawan_ijin(),
+            'total_karyawan_cuti' => $this->dashboard_model->get_total_karyawan_cuti(),
             'total_karyawan_terlambat' => $this->dashboard_model->get_total_karyawan_terlambat(),
             'total_karyawan_hadir' => $this->dashboard_model->get_total_karyawan_hadir()
         ];

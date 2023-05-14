@@ -15,6 +15,9 @@ class Api extends CI_Controller
         parent::__construct();
         $this->load->model('api_model');
         $this->api_model->store_log_post_data();
+
+        $this->form_validation->set_error_delimiters('', ''); 
+
     }
 
     public function login()
@@ -44,6 +47,14 @@ class Api extends CI_Controller
                         'required' => '%s harus diisi',
                         'alpha_numeric' => '%s tidak berlaku'
                     ]
+                ],
+                [
+                    'field' => 'device_id',
+                    'label' => 'Device ID',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '%s tidak terdeteksi'
+                    ]
                 ]
             ];
 
@@ -51,11 +62,13 @@ class Api extends CI_Controller
             
             if ($this->form_validation->run() === false) {
                 $meta_status = 400;
-                $meta_message = htmlspecialchars($this->form_validation->error_string());
+                $meta_message = $this->form_validation->error_string();
+                
 
             } else {
                 $username = $this->input->post('username');
                 $password = $this->input->post('password');
+                $device_id = $this->input->post('device_id');
                 
                 $check_user = $this->api_model->check_user($username, $password);
     
@@ -66,28 +79,64 @@ class Api extends CI_Controller
                 } else {
 
                     if ($check_user['is_admin'] == 1) {
+                        # jika akun login adalah admin
+                        # maka gagal login
+
                         $meta_status = 400;
                         $meta_message = 'Anda tidak memiliki akses ke aplikasi!';
 
                     } else {
-                        $meta_status = 200;
-                        $meta_message = 'Berhasil login !';
-    
-                        $token_payload = $check_user;
-                        $token_payload['expired'] = time() + 500000;
-    
-                        $encode_data = json_encode($token_payload);
-                        $user_token = token_encrypt($encode_data);
-    
-                        $this->db->where('nip', $check_user['nip'])
+                        
+                        if ($check_user['device_id'] == '') {
+                            # jika device id terdaftar kosong
+                            # maka insert device id di akun 
+                            # login berhasil
+
+                            $device_id_valid = true;
+
+                            $this->db->where('nip', $check_user['nip'])
                             ->update('ms_karyawan', [
-                                'user_token' => $user_token
+                                'device_id' => $device_id
                             ]);
+
+                        } else if ($check_user['device_id'] == $device_id) {
+                            # jika device id perangkat sama dengan yang terdaftar
+                            # maka login berhasil
+
+                            $device_id_valid = true;
+
+                        } else {
+                            # jika device id perangkat tidak sama dengan yang terdaftar
+                            # maka login gagal
+
+                            $device_id_valid = false;
+
+                        }
+
+                        if ($device_id_valid === false) {
+                            $meta_status = 400;
+                            $meta_message = 'ID perangkat tidak sesuai !';
+
+                        } else {
+                            $meta_status = 200;
+                            $meta_message = 'Berhasil login !';
         
-                        $data = [
-                            'karyawan' => $check_user,
-                            'token' => $user_token
-                        ];
+                            $token_payload = $check_user;
+                            $token_payload['expired'] = time() + 500000;
+        
+                            $encode_data = json_encode($token_payload);
+                            $user_token = token_encrypt($encode_data);
+        
+                            $this->db->where('nip', $check_user['nip'])
+                                ->update('ms_karyawan', [
+                                    'user_token' => $user_token
+                                ]);
+            
+                            $data = [
+                                'karyawan' => $check_user,
+                                'token' => $user_token
+                            ];
+                        }
                     }
                 }
             }

@@ -53,11 +53,14 @@ class Karyawan_model extends CI_Model
                 mk.nik, mk.tgl_lahir,
                 mk.jenis_kelamin, 
                 ma.id AS id_agama, ma.agama,
-                mk.alamat, mk.status_kawin
+                mk.alamat, mk.status_kawin,
+                msl.id AS id_lokasi_kerja,
+                msl.lokasi AS lokasi_kerja
             FROM ms_karyawan mk
-            INNER JOIN ms_agama ma ON ma.id = mk.id_agama
-            INNER JOIN ms_divisi md ON md.id = mk.id_divisi
-            INNER JOIN ms_jabatan mj ON mj.id = mk.id_jabatan
+            LEFT JOIN ms_agama ma ON ma.id = mk.id_agama AND ma.status = 1
+            LEFT JOIN ms_divisi md ON md.id = mk.id_divisi AND md.status = 1
+            LEFT JOIN ms_jabatan mj ON mj.id = mk.id_jabatan AND mj.status = 1
+            LEFT JOIN ms_scan_log msl ON msl.id = mk.id_lokasi_kerja AND msl.status = 1
             WHERE mk.nip = '$nip_karyawan'");
 
         return $query->row_array();
@@ -86,7 +89,8 @@ class Karyawan_model extends CI_Model
 
         if (empty($nip)) {
             $nip = $this->master_model->generate_nip();
-            $password = $this->master_model->password_generate($nip);
+            $password = '123456';
+            // $password = $this->master_model->password_generate($nip);
 
             $this->db->query("INSERT INTO ms_karyawan
                 (

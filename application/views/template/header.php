@@ -92,11 +92,19 @@
                                     <h6 class="overline-title text-primary-alt">Laporan</h6>
                                 </li>
                                 <li class="nk-menu-item">
-                                    <a href="<?= site_url('rekap') ?>" class="nk-menu-link">
+                                    <a href="<?= site_url('rekap/absensi') ?>" class="nk-menu-link">
                                         <span class="nk-menu-icon">
                                             <em class="icon ni ni-reports-alt"></em>
                                         </span>
                                         <span class="nk-menu-text">Laporan Absensi</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="<?= site_url('rekap/scanlog') ?>" class="nk-menu-link">
+                                        <span class="nk-menu-icon">
+                                            <em class="icon ni ni-clock-fill"></em>
+                                        </span>
+                                        <span class="nk-menu-text">Laporan Scanlog</span>
                                     </a>
                                 </li>
                                 <li class="nk-menu-heading">

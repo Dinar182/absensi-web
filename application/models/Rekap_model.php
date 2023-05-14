@@ -52,7 +52,7 @@ class Rekap_model extends CI_Model
                         COUNT(1) AS jumlah_hadir
                     FROM absensi_karyawan ak 
                     INNER JOIN (
-                        SELECT MAX(ak.id) AS id
+                        SELECT MIN(ak.id) AS id
                         FROM absensi_karyawan ak
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '1'
@@ -65,9 +65,24 @@ class Rekap_model extends CI_Model
                         INNER JOIN (
                             SELECT MAX(ak.id) AS id
                             FROM absensi_karyawan ak
+                            INNER JOIN ms_karyawan mk ON mk.nip = ak.nip
+                            INNER JOIN ms_scan_log msl ON msl.id = mk.id_lokasi_kerja
+                            LEFT JOIN (
+                                SELECT ik.nip,
+                                    ik.tanggal
+                                FROM ijin_karyawan ik
+                                WHERE ik.status = '1'
+                                    AND ik.status_ijin = '1'
+                                    AND ik.jenis_ijin = '1'
+                                    AND MONTH(tanggal) = '$bulan'
+                            ) ik ON ik.nip = ak.nip AND ik.tanggal = ak.tanggal
                             WHERE ak.status = '1'
                                 AND ak.flag_scan = '2'
                                 AND MONTH(ak.tanggal) = '$bulan'
+                                AND CASE 
+                                        WHEN ik.tanggal IS NULL THEN ak.jam >= msl.jam_pulang
+                                        ELSE 1 = 1
+                                    END
                             GROUP BY ak.nip, ak.tanggal
                         ) ls ON ls.id = ak.id
                         WHERE ak.status = '1'
@@ -130,6 +145,64 @@ class Rekap_model extends CI_Model
                     AND (
                         mk.nip LIKE '%$search%'
                         OR mk.nama LIKE '%$search%'
+                    )
+                ORDER BY $col_name $order_dir
+                LIMIT $start, $limit");
+
+        return $query;
+    }
+
+    public function dt_select_rekap_scanlog($params = [])
+    {
+        $start = isset($params['start']) ? $params['start'] : 0;
+        $limit = isset($params['limit']) ? $params['limit'] : 10;
+
+        $search = isset($params['search']) ? $params['search'] : '';
+        $search = $this->db->escape_str($search);
+
+        $col_name = isset($params['col_name']) ? $params['col_name'] : 'mk.nip';
+        $order_dir = isset($params['order_dir']) ? $params['order_dir'] : 'ASC';
+
+        $start_date = isset($params['start_date']) ? $params['start_date'] : '';
+        $end_date = isset($params['end_date']) ? $params['end_date'] : '';
+
+        if (!empty($start_date) 
+        && !empty($end_date)) {
+            $where_daterange = " AND ak.tanggal BETWEEN '$start_date' AND '$end_date'";
+
+        } else if (!empty($start_date)) {
+            $where_daterange = " AND ak.tanggal >= '$start_date'";
+            
+        } else if(!empty($end_date)) {
+            $where_daterange = " AND ak.tanggal <= '$end_date'";
+
+        } else {
+            $where_daterange = " AND ak.tanggal = DATE(NOW())";
+        }
+
+        $query = $this->db->query("SELECT 
+                    ak.foto AS foto_scan,
+                    mk.nama AS nama_karyawan,
+                    mk.nip AS nip_karyawan,
+                    ak.flag_scan, ak.tanggal, ak.jam,
+                    COUNT(1) OVER() AS total_record
+                FROM absensi_karyawan ak 
+                INNER JOIN ms_karyawan mk ON mk.nip = ak.nip
+                INNER JOIN (
+                    SELECT 
+                        CASE 
+                            WHEN ak.flag_scan = 1 THEN MIN(id)
+                            ELSE MAX(id)
+                        END AS id_scan
+                    FROM absensi_karyawan ak
+                    WHERE ak.status = '1'
+                        $where_daterange
+                    GROUP BY nip
+                ) ls ON ls.id_scan = ak.id
+                WHERE mk.status = '1'
+                    AND (
+                        mk.nama LIKE '%$search%'
+                        OR mk.nip LIKE '%$search%'
                     )
                 ORDER BY $col_name $order_dir
                 LIMIT $start, $limit");

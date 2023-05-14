@@ -52,15 +52,41 @@ class Ajax_karyawan extends CI_Controller
 				$row[] = $karyawan['nip_karyawan'];
 
                 $pass_foto = '
-                <div class="nk-activity-media">
-                    <img class="pass-foto" src="'.site_url('assets/upload/pass-foto/') . $karyawan['foto_karyawan']. '" alt>
-                </div>';
+                <a href="'.site_url('assets/upload/pass-foto/') . $karyawan['foto_karyawan'].'" target="_BLANK">
+                    <div class="nk-activity-media">
+                        <img class="pass-foto" src="'.site_url('assets/upload/pass-foto/') . $karyawan['foto_karyawan']. '" alt>
+                    </div>
+                </a>';
 
 				$row[] = $pass_foto;
 				$row[] = $karyawan['username'];
 				$row[] = $karyawan['jenis_kelamin'];
 				$row[] = $karyawan['jabatan_karyawan'];
 				$row[] = $karyawan['divisi_karyawan'];
+
+                $btn_delete = '
+                <li>
+                    <a href="javascript:;" onclick="delete_karyawan(this)" nip-kary="'.$karyawan['nip_karyawan'].'">
+                        <em class="icon ni ni-user-remove-fill"></em>
+                        <span>Delete Karyawan</span>
+                    </a>
+                </li>';
+
+                $btn_reset_pass = '
+                <li>
+                    <a href="javascript:;" onclick="reset_password(this)" nip-kary="'.$karyawan['nip_karyawan'].'">
+                        <em class="icon ni ni-reload-alt"></em>
+                        <span>Reset Password</span>
+                    </a>
+                </li>';
+
+                $btn_reset_deviceid = '
+                <li>
+                    <a href="javascript:;" onclick="reset_deviceid(this)" nip-kary="'.$karyawan['nip_karyawan'].'">
+                        <em class="icon ni ni-regen-alt"></em>
+                        <span>Reset Device ID</span>
+                    </a>
+                </li>';
 
                 $btn_action = '
                 <ul class="nk-tb-actions" style="display: block;">
@@ -75,6 +101,9 @@ class Ajax_karyawan extends CI_Controller
                                             <span>Update data</span>
                                         </a>
                                     </li>
+                                    '.$btn_delete.'
+                                    '.$btn_reset_pass.'
+                                    '.$btn_reset_deviceid.'
                                 </ul>
                             </div>
                         </div>
@@ -290,6 +319,126 @@ class Ajax_karyawan extends CI_Controller
                     $meta_status = 400;
                     $meta_message = 'Gagal menyimpan data karyawan!';
                     break;
+            }
+        }
+
+        response_api($meta_status, $meta_message);
+    }
+
+    public function delete_karyawan()
+    {
+        $validator = [
+            [
+                'field' => 'nip',
+                'label' => 'Nip',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Invalid Request',
+                ]
+            ]
+        ];
+
+        $this->form_validation->set_rules($validator);
+        
+        if ($this->form_validation->run() === false) {
+            $meta_status = 400;
+            $meta_message = $this->form_validation->error_string();
+
+        } else {
+            $nip = $this->input->post('nip');
+
+            $delete_karyawan = 
+                $this->db->where('nip', $nip)
+                    ->update('ms_karyawan', [
+                        'status' => 9
+                    ]);
+
+            if ($delete_karyawan === false) {
+                $meta_status = 400;
+                $meta_message = 'Gagal menghapus karyawan !';
+
+            } else {
+                $meta_status = 200;
+                $meta_message = 'Berhasil menghapus karyawan !';
+            }
+        }
+
+        response_api($meta_status, $meta_message);
+    }
+
+    public function reset_password_karyawan()
+    {
+        $validator = [
+            [
+                'field' => 'nip',
+                'label' => 'Nip',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Invalid Request',
+                ]
+            ]
+        ];
+
+        $this->form_validation->set_rules($validator);
+        
+        if ($this->form_validation->run() === false) {
+            $meta_status = 400;
+            $meta_message = $this->form_validation->error_string();
+
+        } else {
+            $nip = $this->input->post('nip');
+
+            $reset_password = $this->db->query("UPDATE ms_karyawan SET password = AES_ENCRYPT('123456', nip) WHERE nip = '$nip'");
+
+            if ($reset_password === false) {
+                $meta_status = 400;
+                $meta_message = 'Gagal me-reset password !';
+
+            } else {
+                $meta_status = 200;
+                $meta_message = 'Berhasil me-reset password !';
+            }
+        }
+
+        response_api($meta_status, $meta_message);
+    }
+
+    public function reset_deviceid_karyawan()
+    {
+        $validator = [
+            [
+                'field' => 'nip',
+                'label' => 'Nip',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Invalid Request',
+                ]
+            ]
+        ];
+
+        $this->form_validation->set_rules($validator);
+        
+        if ($this->form_validation->run() === false) {
+            $meta_status = 400;
+            $meta_message = $this->form_validation->error_string();
+
+        } else {
+            $nip = $this->input->post('nip');
+
+            $reset_deviceid = 
+                $this->db->where('nip', $nip)
+                    ->update('ms_karyawan', [
+                        'device_id' => '',
+                        'user_token' => ''
+                    ]);
+
+            if ($reset_deviceid === false) {
+                $meta_status = 400;
+                $meta_message = 'Gagal me-reset Device ID !';
+
+            } else {
+                $meta_status = 200;
+                $meta_message = 'Berhasil me-reset Device ID !';
             }
         }
 

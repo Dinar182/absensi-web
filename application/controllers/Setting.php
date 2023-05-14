@@ -194,6 +194,14 @@ class Setting extends CI_Controller
 				$row[] = $lokasi['latitude'].', '.$lokasi['longtitude'];
 				$row[] = $lokasi['radius'].' Meter';
 
+                $btn_delete = '
+                <li>
+                    <a href="javascript:;" onclick="delete_lokasi_kerja(this)" id-lokasi="'.$lokasi['id'].'">
+                        <em class="icon ni ni-trash-fill"></em>
+                        <span>Delete Lokasi Kerja</span>
+                    </a>
+                </li>';
+
                 $btn_action = '
                 <ul class="nk-tb-actions" style="display: block;">
                     <li>
@@ -207,6 +215,7 @@ class Setting extends CI_Controller
                                             <span>Update data</span>
                                         </a>
                                     </li>
+                                    '.$btn_delete.'
                                 </ul>
                             </div>
                         </div>
@@ -228,5 +237,46 @@ class Setting extends CI_Controller
         ];
 
         return response_json($response);
+    }
+
+    public function delete_lokasi_kerja()
+    {
+        $validator = [
+            [
+                'field' => 'id_lokasi',
+                'label' => 'Lokasi',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Invalid Request',
+                ]
+            ]
+        ];
+
+        $this->form_validation->set_rules($validator);
+        
+        if ($this->form_validation->run() === false) {
+            $meta_status = 400;
+            $meta_message = $this->form_validation->error_string();
+
+        } else {
+            $id_lokasi = $this->input->post('id_lokasi');
+
+            $delete_karyawan = 
+                $this->db->where('id', $id_lokasi)
+                    ->update('ms_scan_log', [
+                        'status' => 9
+                    ]);
+
+            if ($delete_karyawan === false) {
+                $meta_status = 400;
+                $meta_message = 'Gagal menghapus Lokasi Kerja !';
+
+            } else {
+                $meta_status = 200;
+                $meta_message = 'Berhasil menghapus Lokasi Kerja !';
+            }
+        }
+
+        response_api($meta_status, $meta_message);
     }
 }

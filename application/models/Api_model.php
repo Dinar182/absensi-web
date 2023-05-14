@@ -9,15 +9,17 @@ class Api_model extends CI_Model
 
     public function check_user($username = '', $password = '')
     {
+        $base_url = site_url('assets/upload/pass-foto/');
+
         $query = $this->db->query("SELECT
                 mk.nip, mk.nama, 
-                mk.foto_profile AS profile,
+                CONCAT('$base_url', mk.foto_profile) AS profile,
                 md.divisi, mj.jabatan,
                 mk.email, mk.phone AS no_telp,
                 mk.nik, mk.tgl_lahir,
                 mk.jenis_kelamin, ma.agama,
                 mk.alamat, mk.status_kawin AS status_pernikahan,
-                mk.is_admin
+                mk.is_admin, mk.device_id
             FROM ms_karyawan mk
             INNER JOIN ms_agama ma ON ma.id = mk.id_agama
             INNER JOIN ms_divisi md ON md.id = mk.id_divisi
@@ -183,14 +185,13 @@ class Api_model extends CI_Model
             return '3';
         } else {
 
-            $rule_scan = $this->db->get('ms_scan_log')->row_array();
             $latitude = $lokasi_kerja['latitude'];
             $longtitude = $lokasi_kerja['longtitude'];
             $status_absen = '1';
     
             $get_radius = radius_calculate($latitude, $longtitude, $current_latitude, $current_longtitude);
             
-            if ($get_radius > $rule_scan['radius']) {
+            if ($get_radius > $lokasi_kerja['radius']) {
     
                 return '2';
             } else {
@@ -215,7 +216,7 @@ class Api_model extends CI_Model
                 $this->db->trans_begin();
         
                 if ($flag_scan == '1') {
-                    if (strtotime($jam) > strtotime($rule_scan['jam_masuk'])) {
+                    if (strtotime($jam) > strtotime($lokasi_kerja['jam_masuk'])) {
                         # jika jam scan lebih dari jam masuk
                         # maka status absen telat
                         $status_absen = '2';
@@ -403,12 +404,17 @@ class Api_model extends CI_Model
                 $nip_kary = $decode_token->nip;
                 $karyawan = $this->db->where('nip', $nip_kary)->get('ms_karyawan')->row_array();
 
-                if ($karyawan['user_token'] != $token) {
-
+                if (empty($karyawan)) {
                     return false;
+                    
                 } else {
-
-                    return true;
+                    if ($karyawan['user_token'] != $token) {
+    
+                        return false;
+                    } else {
+    
+                        return true;
+                    }
                 }
             }
         }
@@ -420,7 +426,9 @@ class Api_model extends CI_Model
                         msl.*
                     FROM ms_scan_log msl
                     INNER JOIN ms_karyawan mk ON mk.id_lokasi_kerja = msl.id
-                    WHERE mk.nip = '$nip'");
+                    WHERE msl.status = 1
+                        AND mk.status = 1
+                        AND mk.nip = '$nip'");
 
         return $query->row_array();
     }

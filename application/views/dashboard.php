@@ -14,9 +14,9 @@
                 <div class="nk-block">
                     <div class="row g-gs">
                         <div class="col-xxl-6">
-                            <div class="row g-gs">
+                            <div class="row g-gs py-2">
                                 <div class="col-lg-3 col-xxl-12">
-                                    <div class="card card-bordered bg-info text-light">
+                                    <div class="card card-bordered bg-primary text-light">
                                         <div class="card-inner">
                                             <div class="card-amount">
                                                 <span class="amount text-light" style="font-size: 2rem;">
@@ -35,6 +35,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div><!-- .row -->
+                            <div class="row g-gs">
                                 <div class="col-lg-3 col-xxl-12">
                                     <div class="card card-bordered bg-danger text-light">
                                         <div class="card-inner">
@@ -88,6 +90,26 @@
                                                     <div class="invest-data-history me-2">
                                                         <div class="amount text-light fw-bold">
                                                             <em class="icon ni ni-calendar-check-fill me-1"></em> Karyawan Hadir
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-xxl-12">
+                                    <div class="card card-bordered bg-info text-light">
+                                        <div class="card-inner">
+                                            <div class="card-amount">
+                                                <span class="amount text-light" style="font-size: 2rem;">
+                                                    <?= $total_karyawan_cuti ?>
+                                                </span>
+                                            </div>
+                                            <div class="invest-data">
+                                                <div class="invest-data-amount g-2">
+                                                    <div class="invest-data-history me-0">
+                                                        <div class="amount text-light fw-bold">
+                                                            <em class="icon ni ni-users-fill me-1"></em> Karyawan Cuti
                                                         </div>
                                                     </div>
                                                 </div>

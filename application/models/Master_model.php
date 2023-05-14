@@ -67,7 +67,7 @@ class Master_model extends CI_Model
         return $query;
     }
 
-    public function generate_nip()
+    public function generate_nipOLD()
     {
         $query = $this->db->query("SELECT nip FROM ms_karyawan ORDER BY id DESC LIMIT 1");
         $get_query = $query->row_array();
@@ -97,6 +97,37 @@ class Master_model extends CI_Model
         }
 
         return '03.'.$nip_karyawan.'.'. date('m') . date('y');
+    }
+
+    public function generate_nip()
+    {
+        $query = $this->db->query("SELECT nip FROM ms_karyawan ORDER BY id DESC LIMIT 1");
+        $get_query = $query->row_array();
+
+        $last_nip = $get_query['nip'];
+        $counter = (int)substr($last_nip, 6, 4);
+        $counter += 1;
+
+        switch (strlen($counter)) {
+            case '1':
+                $nip_karyawan = '000' . $counter;
+                break;
+
+            case '2':
+                $nip_karyawan = '00' . $counter;
+                break;
+
+            case '3':
+                $nip_karyawan = '0' . $counter;
+                break;
+
+            case '4':
+                $nip_karyawan =  $counter;
+                break;
+
+        }
+
+        return date('ymd') . $nip_karyawan;
     }
 
     public function password_generate($nip_karyawan = '')

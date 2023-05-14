@@ -10,7 +10,7 @@ class Rekap extends CI_Controller
         $this->load->model('rekap_model');
 	}
 
-    public function index()
+    public function absensi()
     {
         $header = [
             'page_main_nav' => 'rekap'
@@ -25,5 +25,22 @@ class Rekap extends CI_Controller
         ];
 
         admin_view($header, 'page/rekap/index', $data);
+    }
+
+    public function scanlog()
+    {
+        $header = [
+            'page_main_nav' => 'rekap'
+        ];
+
+        $data = [
+            'page_title' => 'Laporan Scanlog Karyawan',
+            'bottom_js_pages' => '
+                <script src="'. site_url('assets/js/datatables/datatable-btns.js?_=') . rand() .'"></script>
+                <script src="'. site_url('assets/js/page/rekap/scan-log.js?_=') . rand() .'"></script>
+            '
+        ];
+
+        admin_view($header, 'page/rekap/scan-log', $data);
     }
 }
