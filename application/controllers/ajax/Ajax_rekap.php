@@ -20,7 +20,8 @@ class Ajax_rekap extends CI_Controller
         $col_idx = $this->input->get('order')[0]['column'];
         $order_dir = $this->input->get('order')[0]['dir'];
 
-        $bulan = $this->input->get('bulan');
+        $start_date = $this->input->get('start_date');
+        $end_date = $this->input->get('end_date');
 
         $col_array = [
             null, 'mk.nip', 'mk.nama'
@@ -34,7 +35,8 @@ class Ajax_rekap extends CI_Controller
             'search' => $search,
             'col_name' => $col_name,
             'order_dir' => $order_dir,
-            'bulan' => $bulan
+            'start_date' => $start_date,
+            'end_date' => $end_date
         ];
 
 

@@ -18,31 +18,20 @@ class Rekap_model extends CI_Model
         $col_name = isset($params['col_name']) ? $params['col_name'] : 'mk.nip';
         $order_dir = isset($params['order_dir']) ? $params['order_dir'] : 'ASC';
 
-        $bulan = isset($params['bulan']) ? $params['bulan'] : '';
-        $total_weekend = weekend_count($bulan);
-		if ($bulan < date('m')) {
-            $date = date('Y-m-d', strtotime(date('Y').'-'.$bulan.'-01'));
-			
-		} elseif ($bulan == date('m')) {
-
-			$date = date('Y-m-d');
-		} else {
-
-			$date = 0;
-		}
+        $start_date = isset($params['start_date']) ? $params['start_date'] : '';
+        $end_date = isset($params['end_date']) ? $params['end_date'] : '';
+        $total_weekend = weekend_count($start_date, $end_date);
 
         $query = $this->db->query("SELECT 
                     mk.nip,
                     mk.nama AS nama_kary,
                     IFNULL(hd.jumlah_hadir, 0) AS jumlah_hadir,
                     IFNULL(lt.jumlah_telat, 0) AS jumlah_telat,
-                    CASE 
-                        WHEN '$bulan' = DATE_FORMAT(NOW() , '%m')
-                            THEN (CAST((DATE_FORMAT('$date', '%d')) AS SIGNED) - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED)) - IFNULL(ct.jumlah_cuti, 0) - $total_weekend
-                        WHEN '$bulan' < DATE_FORMAT(NOW() , '%m')
-                            THEN (CAST(DAY(LAST_DAY(DATE_FORMAT('$date' , '%Y-%$bulan-%d'))) AS SIGNED) - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED)) - IFNULL(ct.jumlah_cuti, 0) - $total_weekend
-                        ELSE 0
-                    END AS jumlah_mangkir,
+                    CAST(DATEDIFF('$end_date', '$start_date') + 1 AS SIGNED) 
+                        - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED) 
+                        - IFNULL(ct.jumlah_cuti, 0) 
+                        - $total_weekend 
+                    AS jumlah_mangkir,
                     IFNULL(ij.jumlah_ijin, 0) AS jumlah_ijin,
                     IFNULL(ct.jumlah_cuti, 0) AS jumlah_cuti,
                     COUNT(1) OVER() AS total_record
@@ -56,7 +45,7 @@ class Rekap_model extends CI_Model
                         FROM absensi_karyawan ak
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '1'
-                            AND MONTH(ak.tanggal) = '$bulan'
+                            AND ak.tanggal BETWEEN $start_date AND $end_date
                         GROUP BY ak.nip, ak.tanggal
                     ) ls ON ls.id = ak.id
                     INNER JOIN (
@@ -74,11 +63,11 @@ class Rekap_model extends CI_Model
                                 WHERE ik.status = '1'
                                     AND ik.status_ijin = '1'
                                     AND ik.jenis_ijin = '1'
-                                    AND MONTH(tanggal) = '$bulan'
+                                    AND ik.tanggal BETWEEN $start_date AND $end_date
                             ) ik ON ik.nip = ak.nip AND ik.tanggal = ak.tanggal
                             WHERE ak.status = '1'
                                 AND ak.flag_scan = '2'
-                                AND MONTH(ak.tanggal) = '$bulan'
+                                AND ak.tanggal BETWEEN $start_date AND $end_date
                                 AND CASE 
                                         WHEN ik.tanggal IS NULL THEN ak.jam >= msl.jam_pulang
                                         ELSE 1 = 1
@@ -87,11 +76,11 @@ class Rekap_model extends CI_Model
                         ) ls ON ls.id = ak.id
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '2'
-                            AND MONTH(ak.tanggal) = '$bulan'
+                            AND ak.tanggal BETWEEN $start_date AND $end_date
                     ) pl ON pl.nip = ak.nip AND pl.tanggal = ak.tanggal
                     WHERE ak.status = '1'
                         AND ak.flag_scan = '1'
-                        AND MONTH(ak.tanggal) = '$bulan'
+                        AND ak.tanggal BETWEEN $start_date AND $end_date
                     GROUP BY ak.nip
                 ) hd ON hd.nip = mk.nip
                 LEFT JOIN (
@@ -104,13 +93,13 @@ class Rekap_model extends CI_Model
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '1'
                             AND ak.status_absen = '2'
-                            AND MONTH(ak.tanggal) = '$bulan'
+                            AND ak.tanggal BETWEEN $start_date AND $end_date
                         GROUP BY ak.nip, ak.tanggal
                     ) ls ON ls.id = ak.id
                     WHERE ak.status = '1'
                         AND ak.flag_scan = '1'
                         AND ak.status_absen = '2'
-                        AND MONTH(ak.tanggal) = '$bulan'
+                        AND ak.tanggal BETWEEN $start_date AND $end_date
                     GROUP BY ak.nip
                 ) lt ON lt.nip = mk.nip
                 LEFT JOIN (
@@ -119,7 +108,7 @@ class Rekap_model extends CI_Model
                     FROM ijin_karyawan ik 
                     WHERE ik.status = '1'
                         AND ik.status_ijin = '2'
-                        AND MONTH(ik.tanggal) = '$bulan'
+                        AND ik.tanggal BETWEEN $start_date AND $end_date
                     GROUP BY ik.nip
                 ) ij ON ij.nip = mk.nip
                 LEFT JOIN (
@@ -134,8 +123,8 @@ class Rekap_model extends CI_Model
                         WHERE ck.status = '1'
                             AND ck.status_cuti = '2'
                             AND (
-                                MONTH(ck.tgl_mulai) = '$bulan'
-                                OR MONTH(ck.tgl_selesai) = '$bulan'
+                                ck.tgl_mulai BETWEEN $start_date AND $end_date
+                                OR ck.tgl_selesai BETWEEN $start_date AND $end_date
                             )
                     ) lc ON lc.id = ck.id
                     GROUP BY ck.nip
@@ -208,5 +197,28 @@ class Rekap_model extends CI_Model
                 LIMIT $start, $limit");
 
         return $query;
+    }
+
+    public function query_log()
+    {
+        # log Rekap Absensi
+		// if ($bulan < date('m')) {
+        //     $date = date('Y-m-d', strtotime(date('Y').'-'.$bulan.'-01'));
+			
+		// } elseif ($bulan == date('m')) {
+
+		// 	$date = date('Y-m-d');
+		// } else {
+
+		// 	$date = 0;
+		// }
+
+        // CASE 
+        // WHEN '$bulan' = DATE_FORMAT(NOW() , '%m')
+        //     THEN (CAST((DATE_FORMAT('$date', '%d')) AS SIGNED) - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED)) - IFNULL(ct.jumlah_cuti, 0) - $total_weekend
+        // WHEN '$bulan' < DATE_FORMAT(NOW() , '%m')
+        //     THEN (CAST(DAY(LAST_DAY(DATE_FORMAT('$date' , '%Y-%$bulan-%d'))) AS SIGNED) - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED)) - IFNULL(ct.jumlah_cuti, 0) - $total_weekend
+        // ELSE 0
+        // END AS jumlah_mangkir,
     }
 }

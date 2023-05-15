@@ -51,8 +51,8 @@ if (!function_exists('str_random')) {
 	}
 }
 
-if (!function_exists('weekend_count')) {
-	function weekend_count($month = '')
+if (!function_exists('weekend_countOLD')) {
+	function weekend_countOLD($month = '')
 	{
 		$weekend_count = 0;
 		$month_filtered = ($month == '') ? date('m') : $month;
@@ -77,5 +77,28 @@ if (!function_exists('weekend_count')) {
 		}
 		
 		return $weekend_count;
+	}
+}
+
+if (!function_exists('weekend_count')) {
+	function weekend_count($start_date = '', $end_date = '')
+	{
+		$start = new DateTime($start_date);
+		$end = new DateTime($end_date);
+	
+		// Adjust the end date by one day so that it is inclusive
+		$end->modify('+1 day');
+	
+		$interval = new DateInterval('P1D'); // 1 day interval
+		$period = new DatePeriod($start, $interval, $end);
+	
+		$count = 0;
+		foreach ($period as $date) {
+			if ($date->format('N') > 6) { // Saturday or Sunday (6 or 7)
+				$count++;
+			}
+		}
+	
+		return $count;
 	}
 }

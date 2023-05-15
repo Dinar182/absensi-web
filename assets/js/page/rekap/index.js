@@ -1,5 +1,6 @@
 let payload_data = {
-    bulan: $('#__Bulan').val()
+    start_date: $('#__tanggalStart').val(),
+    end_date: $('#__tanggalEnd').val(),
 }
 
 const data_rekap_absensi = () => {
@@ -44,7 +45,8 @@ const data_rekap_absensi = () => {
 };
 
 $('#__btnFilter').on('click', function(){
-    payload_data.bulan = $('#__Bulan').val();
+    payload_data.start_date = $('#__tanggalStart').val();
+    payload_data.end_date = $('#__tanggalEnd').val();
 
     data_rekap_absensi();
 });

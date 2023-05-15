@@ -15,18 +15,23 @@
                     <div class="card card-bordered card-preview">
                         <div class="card-inner">
                             <div class="row pb-3">
-                                <div class="col-md-3 offset-md-8">
+                                <div class="col-md-5 offset-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Bulan</label>
+                                        <label class="form-label">Tanggal Dari - Sampai</label>
                                         <div class="form-control-wrap">
-                                            <select class="form-select js-select2" id="__Bulan">
+                                            <!-- <select class="form-select js-select2" id="__Bulan">
                                                 <option value="0" disabled>- Pilih Bulan -</option>
                                                 <?php for ($i = 1; $i <= 12; $i++): ?>
-                                                <option value="<?= date('m', strtotime('2019-' . $i . '-01')) ?>" <?= (date('n') == $i) ? 'selected' : '' ?>>
-                                                    <?= strftime('%B', strtotime('2019-' . $i . '-01')) ?>
+                                                <option value="<?php # date('m', strtotime('2019-' . $i . '-01')) ?>" <?php # (date('n') == $i) ? 'selected' : '' ?>>
+                                                    <?php # strftime('%B', strtotime('2019-' . $i . '-01')) ?>
                                                 </option>
                                                 <?php endfor ?>
-                                            </select>
+                                            </select> -->
+                                            <div class="input-daterange date-picker-range input-group">
+                                                <input type="text" class="form-control" id="__tanggalStart"  value="<?php echo date('Y-m-01'); ?>" />
+                                                <div class="input-group-addon">TO</div>
+                                                <input type="text" class="form-control" id="__tanggalEnd" value="<?php echo date('Y-m-d'); ?>" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
