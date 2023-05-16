@@ -498,14 +498,6 @@ class Api extends CI_Controller
                         ]
                     ],
                     [
-                        'field' => 'jam',
-                        'label' => 'Jam',
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Invalid Request',
-                        ]
-                    ],
-                    [
                         'field' => 'latitude',
                         'label' => 'Lokasi',
                         'rules' => 'required',
@@ -544,12 +536,14 @@ class Api extends CI_Controller
     
                 } else {
                     $mid_day = '12:00';
+                    $jam = date('H:i:s');
                     $nip = $this->input->post('nip');
-                    $jam = $this->input->post('jam');
                     $latitude = $this->input->post('latitude');
                     $longtitude = $this->input->post('longtitude');
+
+                    $lokasi_kerja = $this->api_model->get_lokasi_kerja($nip);
     
-                    if (strtotime($jam) > strtotime($mid_day)) {
+                    if (strtotime($jam) > strtotime($lokasi_kerja['jam_pulang'])) {
                         $flag_scan = '2'; # Checkout
                         $scan_message = 'Absen Pulang !';
     
