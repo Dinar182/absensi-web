@@ -446,7 +446,7 @@ class Api_model extends CI_Model
                         DATE_FORMAT(ak.jam, '%H:%i') AS jam_masuk
                     FROM absensi_karyawan ak 
                     INNER JOIN (
-                        SELECT MAX(ak.id) AS id
+                        SELECT MIN(ak.id) AS id
                         FROM absensi_karyawan ak
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '1'

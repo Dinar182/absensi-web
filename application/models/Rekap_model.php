@@ -45,7 +45,7 @@ class Rekap_model extends CI_Model
                         FROM absensi_karyawan ak
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '1'
-                            AND ak.tanggal BETWEEN $start_date AND $end_date
+                            AND ak.tanggal BETWEEN '$start_date' AND '$end_date'
                         GROUP BY ak.nip, ak.tanggal
                     ) ls ON ls.id = ak.id
                     INNER JOIN (
@@ -63,11 +63,11 @@ class Rekap_model extends CI_Model
                                 WHERE ik.status = '1'
                                     AND ik.status_ijin = '1'
                                     AND ik.jenis_ijin = '1'
-                                    AND ik.tanggal BETWEEN $start_date AND $end_date
+                                    AND ik.tanggal BETWEEN '$start_date' AND '$end_date'
                             ) ik ON ik.nip = ak.nip AND ik.tanggal = ak.tanggal
                             WHERE ak.status = '1'
                                 AND ak.flag_scan = '2'
-                                AND ak.tanggal BETWEEN $start_date AND $end_date
+                                AND ak.tanggal BETWEEN '$start_date' AND '$end_date'
                                 AND CASE 
                                         WHEN ik.tanggal IS NULL THEN ak.jam >= msl.jam_pulang
                                         ELSE 1 = 1
@@ -76,11 +76,11 @@ class Rekap_model extends CI_Model
                         ) ls ON ls.id = ak.id
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '2'
-                            AND ak.tanggal BETWEEN $start_date AND $end_date
+                            AND ak.tanggal BETWEEN '$start_date' AND '$end_date'
                     ) pl ON pl.nip = ak.nip AND pl.tanggal = ak.tanggal
                     WHERE ak.status = '1'
                         AND ak.flag_scan = '1'
-                        AND ak.tanggal BETWEEN $start_date AND $end_date
+                        AND ak.tanggal BETWEEN '$start_date' AND '$end_date'
                     GROUP BY ak.nip
                 ) hd ON hd.nip = mk.nip
                 LEFT JOIN (
@@ -93,13 +93,13 @@ class Rekap_model extends CI_Model
                         WHERE ak.status = '1'
                             AND ak.flag_scan = '1'
                             AND ak.status_absen = '2'
-                            AND ak.tanggal BETWEEN $start_date AND $end_date
+                            AND ak.tanggal BETWEEN '$start_date' AND '$end_date'
                         GROUP BY ak.nip, ak.tanggal
                     ) ls ON ls.id = ak.id
                     WHERE ak.status = '1'
                         AND ak.flag_scan = '1'
                         AND ak.status_absen = '2'
-                        AND ak.tanggal BETWEEN $start_date AND $end_date
+                        AND ak.tanggal BETWEEN '$start_date' AND '$end_date'
                     GROUP BY ak.nip
                 ) lt ON lt.nip = mk.nip
                 LEFT JOIN (
@@ -108,7 +108,7 @@ class Rekap_model extends CI_Model
                     FROM ijin_karyawan ik 
                     WHERE ik.status = '1'
                         AND ik.status_ijin = '2'
-                        AND ik.tanggal BETWEEN $start_date AND $end_date
+                        AND ik.tanggal BETWEEN '$start_date' AND '$end_date'
                     GROUP BY ik.nip
                 ) ij ON ij.nip = mk.nip
                 LEFT JOIN (
@@ -123,8 +123,8 @@ class Rekap_model extends CI_Model
                         WHERE ck.status = '1'
                             AND ck.status_cuti = '2'
                             AND (
-                                ck.tgl_mulai BETWEEN $start_date AND $end_date
-                                OR ck.tgl_selesai BETWEEN $start_date AND $end_date
+                                ck.tgl_mulai BETWEEN '$start_date' AND '$end_date'
+                                OR ck.tgl_selesai BETWEEN '$start_date' AND '$end_date'
                             )
                     ) lc ON lc.id = ck.id
                     GROUP BY ck.nip
