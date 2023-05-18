@@ -98,10 +98,7 @@ class Dashboard_model extends CI_Model
                 INNER JOIN ms_karyawan mk ON mk.nip = ak.nip
                 INNER JOIN (
                     SELECT 
-                        CASE 
-                            WHEN ak.flag_scan = 1 THEN MIN(id)
-                            ELSE MAX(id)
-                        END AS id_scan
+                        MAX(id) AS id_scan
                     FROM absensi_karyawan ak
                     WHERE ak.status = '1'
                         AND ak.tanggal = DATE(NOW())    

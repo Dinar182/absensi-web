@@ -178,11 +178,8 @@ class Rekap_model extends CI_Model
                 FROM absensi_karyawan ak 
                 INNER JOIN ms_karyawan mk ON mk.nip = ak.nip
                 INNER JOIN (
-                    SELECT 
-                        CASE 
-                            WHEN ak.flag_scan = 1 THEN MIN(id)
-                            ELSE MAX(id)
-                        END AS id_scan
+                    SELECT
+                        MAX(id) AS id_scan
                     FROM absensi_karyawan ak
                     WHERE ak.status = '1'
                         $where_daterange

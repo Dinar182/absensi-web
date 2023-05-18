@@ -34,8 +34,9 @@ const dt_rekap_scanlog = () => {
         ajax : {
             url : base_url_ajax + "/ajax_rekap/dt_rekap_scanlog",
             type : "GET",
+            data: payload_data
         },
-        order: [[ 1, 'desc' ]],
+        order: [[ 3, 'DESC' ]],
     });
 };
 
