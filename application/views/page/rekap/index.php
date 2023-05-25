@@ -56,6 +56,7 @@
                                         <th>Terlambat</th>
                                         <th>Mangkir</th>
                                         <th>Ijin</th>
+                                        <th>Cuti</th>
                                     </tr>
                                 </thead>
                             </table>

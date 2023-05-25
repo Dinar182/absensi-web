@@ -13,7 +13,7 @@ const data_rekap_absensi = () => {
         },
         columnDefs: [
             {
-                target: [0, 1, 3, 4, 5, 6],
+                target: [0, 1, 3, 4, 5, 6, 7],
                 className: "text-center align-middle"
             },
             {

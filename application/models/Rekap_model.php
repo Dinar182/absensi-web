@@ -152,8 +152,9 @@ class Rekap_model extends CI_Model
         $col_name = isset($params['col_name']) ? $params['col_name'] : 'mk.nip';
         $order_dir = isset($params['order_dir']) ? $params['order_dir'] : 'ASC';
 
-        $start_date = isset($params['start_date']) ? $params['start_date'] : '';
-        $end_date = isset($params['end_date']) ? $params['end_date'] : '';
+        // $start_date = isset($params['start_date']) ? $params['start_date'] : '';
+        // $end_date = isset($params['end_date']) ? $params['end_date'] : '';
+        $tanggal_absen = isset($params['tanggal_absen']) ? $params['tanggal_absen'] : '';
 
         if (!empty($start_date) 
         && !empty($end_date)) {
@@ -182,7 +183,7 @@ class Rekap_model extends CI_Model
                         MAX(id) AS id_scan
                     FROM absensi_karyawan ak
                     WHERE ak.status = '1'
-                        $where_daterange
+                        AND ak.tanggal = '$tanggal_absen'
                     GROUP BY nip
                 ) ls ON ls.id_scan = ak.id
                 WHERE mk.status = '1'

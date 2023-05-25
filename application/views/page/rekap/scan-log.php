@@ -17,13 +17,14 @@
                             <div class="row pb-3">
                                 <div class="col-md-4 offset-md-7">
                                     <div class="form-group">
-                                        <label class="form-label">Tanggal Penerimaan</label>
+                                        <label class="form-label">Tanggal Absen</label>
                                         <div class="form-control-wrap">
-                                            <div class="input-daterange date-picker-range input-group">
+                                        <input type="text" class="form-control date-picker" value="<?= date('Y-m-d') ?>" id="__TanggalAbsen" readonly>
+                                            <!-- <div class="input-daterange date-picker-range input-group">
                                                 <input type="text" class="form-control" id="__tanggalStart"  value="<?php echo date('Y-m-01'); ?>" />
                                                 <div class="input-group-addon">TO</div>
                                                 <input type="text" class="form-control" id="__tanggalEnd" value="<?php echo date('Y-m-d'); ?>" />
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>

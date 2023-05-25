@@ -91,8 +91,9 @@ class Ajax_rekap extends CI_Controller
 
         $col_name = isset($col_array[$col_idx]) ? $col_array[$col_idx] : 'ak.jam';
 
-        $start_date = $this->input->get('start_date');
-        $end_date = $this->input->get('end_date');
+        // $start_date = $this->input->get('start_date');
+        // $end_date = $this->input->get('end_date');
+        $tanggal_absen = $this->input->get('tanggal_absen');
 
         $param_model = [
             'start' => $start,
@@ -100,8 +101,9 @@ class Ajax_rekap extends CI_Controller
             'search' => $search,
             'col_name' => $col_name,
             'order_dir' => $order_dir,
-            'start_date' => $start_date,
-            'end_date' => $end_date
+            // 'start_date' => $start_date,
+            // 'end_date' => $end_date
+            'tanggal_absen' => $tanggal_absen
         ];
 
 

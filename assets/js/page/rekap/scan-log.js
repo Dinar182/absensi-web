@@ -1,6 +1,7 @@
 let payload_data = {
-    start_date: $('#__tanggalStart').val(),
-    end_date: $('#__tanggalEnd').val(),
+    tanggal_absen : $('#__TanggalAbsen').val()
+    // start_date: $('#__tanggalStart').val(),
+    // end_date: $('#__tanggalEnd').val(),
 }
 
 const dt_rekap_scanlog = () => {
@@ -41,8 +42,9 @@ const dt_rekap_scanlog = () => {
 };
 
 $('#__btnFilter').on('click', function(){
-    payload_data.start_date = $('#__tanggalStart').val();
-    payload_data.end_date = $('#__tanggalEnd').val();
+    // payload_data.start_date = $('#__tanggalStart').val();
+    // payload_data.end_date = $('#__tanggalEnd').val();
+    payload_data.tanggal_absen = $('#__TanggalAbsen').val();
 
     dt_rekap_scanlog();
 });
