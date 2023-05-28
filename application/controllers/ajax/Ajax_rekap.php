@@ -131,7 +131,7 @@ class Ajax_rekap extends CI_Controller
                 }
 
                 $row[] = $flag_scan;
-                $row[] = $scan['tanggal'];
+                // $row[] = $scan['tanggal'];
                 $row[] = $scan['jam'];
                 
                 $data[] = $row;

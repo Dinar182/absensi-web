@@ -14,7 +14,7 @@ const dt_rekap_scanlog = () => {
         },
         columnDefs: [
             {
-                target: [0, 2, 3, 4],
+                target: [0, 2, 3],
                 className: "text-center align-middle"
             },
             {

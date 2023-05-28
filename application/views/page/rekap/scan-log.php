@@ -60,7 +60,7 @@
                                         <th>Nama</th>
                                         <th>Nip</th>
                                         <th>Status</th>
-                                        <th>Tanggal</th>
+                                        <!-- <th>Tanggal</th> -->
                                         <th>Waktu</th>
                                     </tr>
                                 </thead>

@@ -568,12 +568,14 @@ class Api extends CI_Controller
                     switch ($res_model) {
                         case '1':
                             $meta_status = 200;
-                            $meta_message = 'Behasil '. $scan_message;
+                            $meta_message = 'Behasil '. $scan_message .PHP_EOL;
+                            $meta_message .= 'Koordinat : '. $latitude .', '. $longtitude;
                             break;
     
                         case '2':
                             $meta_status = 400;
-                            $meta_message = 'Anda tidak dalam radius yang valid';
+                            $meta_message = 'Anda tidak dalam radius yang valid' .PHP_EOL;
+                            $meta_message .= 'Koordinat : '. $latitude .', '. $longtitude;
                             break;
 
                         case '3':
