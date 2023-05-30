@@ -27,6 +27,7 @@ class Rekap_model extends CI_Model
                     mk.nama AS nama_kary,
                     IFNULL(hd.jumlah_hadir, 0) AS jumlah_hadir,
                     IFNULL(lt.jumlah_telat, 0) AS jumlah_telat,
+                    DATEDIFF('$end_date', '$start_date') + 1 AS hari_kerja,
                     CAST(DATEDIFF('$end_date', '$start_date') + 1 AS SIGNED) 
                         - CAST(IFNULL(hd.jumlah_hadir, 0) AS SIGNED) 
                         - IFNULL(ct.jumlah_cuti, 0) 

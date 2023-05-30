@@ -54,7 +54,7 @@
                                         <th>Nama</th>
                                         <th>Masuk</th>
                                         <th>Terlambat</th>
-                                        <th>Mangkir</th>
+                                        <th>Hari Kerja</th>
                                         <th>Ijin</th>
                                         <th>Cuti</th>
                                     </tr>

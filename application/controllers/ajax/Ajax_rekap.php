@@ -56,7 +56,7 @@ class Ajax_rekap extends CI_Controller
                 $row[] = $rekap['nama_kary'];
                 $row[] = $rekap['jumlah_hadir'];
                 $row[] = $rekap['jumlah_telat'];
-                $row[] = $rekap['jumlah_mangkir'];
+                $row[] = $rekap['hari_kerja'];
                 $row[] = $rekap['jumlah_ijin'];
                 $row[] = $rekap['jumlah_cuti'];
                 
